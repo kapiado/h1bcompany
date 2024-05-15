@@ -21,16 +21,22 @@ st.set_page_config(
 # Adding path to Images folder
 path = "Images/"
 
-st.write("# Analysis of Factors Affecting U.S. Permanent Residency Using Data and Predictive Analytics")
-image = Image.open(path+'h1b-stress-visual.png')
+# Page title
+st.write("# Data-Driven Decision Support System for International Job Applicants")
 
+# Adding image with caption
+image = Image.open(path+'h1b-stress-visual.png')
 st.image(image,caption='Figure 1: Stress Caused From H-1B Visa System')
 
-    
-st.header('Background')
+# Problem Statement area with header and body
+st.header('Problem Statement')
+body1 = st.empty()
+body1.write("International students graduating from U.S. educational institutions encounter difficulties in identifying employers who are open to sponsoring H-1B visas.")
 
-c = st.empty()
-c.write('The immigration backlog is a result of the accumulation of immigration applications that have not been processed within a reasonable timeframe. \nIt is caused by increased demand, insufficient resources, complex procedures, and policy changes. Backlogs lead to delays in family reunification, economic impact, strain on resources, and uncertainty for individuals. In this dashboard, we aim to achieve transparency for individuals that are in the middle of the process and want to begin the process for residency. We will be  looking at historical data and factors that influence the wait times in this process, and provide an interface where users can predict their personal waiting time based on their demographics.')
+# Background area with header and body
+st.header('Background')
+body2 = st.empty()
+body2.write('The **absence of a reliable system** providing insights and recommendations on potential visa sponsors impedes their ability to target suitable employers. This limitation significantly **reduces their chances of securing employment in their respective fields** and leveraging their education and skills gained in the United States.')
 
 #new line and research objectives content
 st.write("")
