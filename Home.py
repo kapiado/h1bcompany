@@ -20,14 +20,9 @@ st.set_page_config(
 
 
 st.write("# Analysis of Factors Affecting U.S. Permanent Residency Using Data and Predictive Analytics")
-# image = Image.open('green card.jfif')
+image = Image.open(path+'h1b-stress-visual.png')
 
-#st.image(image,caption='Figure 1: Green Card Resident Image (Amazon)')
-
-
-
-
-#df = pd.read_csv("PERM_Data_5_22_23.csv")
+st.image(image,caption='Figure 1: Stress Caused From H-1B Visa System')
 
     
 st.header('Background')
