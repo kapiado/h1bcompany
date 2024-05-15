@@ -32,7 +32,6 @@ col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
     image = Image.open(path+'h1b-stress-visual.png')
     st.image(image,width=300,caption='Figure 1: Stress Caused From H-1B Visa System')
-    st.image("your_image.jpg", caption='Centered Image')
 
 # Adding image with caption
 #image = Image.open(path+'h1b-stress-visual.png')
