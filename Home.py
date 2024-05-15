@@ -26,7 +26,7 @@ st.write("# Data-Driven Decision Support System for International Job Applicants
 
 # Adding image with caption
 image = Image.open(path+'h1b-stress-visual.png')
-st.image(image,caption='Figure 1: Stress Caused From H-1B Visa System')
+st.image(image,width=300,caption='Figure 1: Stress Caused From H-1B Visa System')
 
 # Problem Statement area with header and body
 st.header('Problem Statement')
