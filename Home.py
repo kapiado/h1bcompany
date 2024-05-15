@@ -18,6 +18,8 @@ st.set_page_config(
     page_icon="👋",
 )
 
+# Adding path to Images folder
+path = "Images/"
 
 st.write("# Analysis of Factors Affecting U.S. Permanent Residency Using Data and Predictive Analytics")
 image = Image.open(path+'h1b-stress-visual.png')
