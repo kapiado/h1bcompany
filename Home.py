@@ -29,13 +29,10 @@ st.write("")
 col1, col2, col3 = st.columns([1, 2, 1])
 
 # Display the image in the middle column
+# Adding image with caption
 with col2:
     image = Image.open(path+'h1b-stress-visual.jpg')
     st.image(image,caption='Figure 1: Stress Caused From H-1B Visa System')
-
-# Adding image with caption
-#image = Image.open(path+'h1b-stress-visual.png')
-#st.image(image,width=300,caption='Figure 1: Stress Caused From H-1B Visa System')
 
 # Problem Statement area with header and body
 st.header('Problem Statement')
@@ -60,6 +57,5 @@ st.write("2. Implement **Machine Learning** models leveraging historical data to
 #new line and team intro
 st.write("")
 st.header('The Team')
-st.write('**Team Members:** Katrina Apiado, Mahek Karamchandani, Nika Mahdavi, & Boaz Nakhimovsky')
-st.write('**Advisor:** Dr. German Serna & Dr. Liz Thompson')
-st.write('**Sponsor:** Dr. Puneet Agarwal')
+st.write('**Team Members:** Katrina Apiado, Jordan Anthony Costa, Ryan Keany')
+st.write('**Advisor:** Dr. Puneet Agarwal')
