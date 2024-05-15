@@ -20,7 +20,7 @@ st.set_page_config(
 
 
 st.write("# Analysis of Factors Affecting U.S. Permanent Residency Using Data and Predictive Analytics")
-image = Image.open('green card.jfif')
+# image = Image.open('green card.jfif')
 
 #st.image(image,caption='Figure 1: Green Card Resident Image (Amazon)')
 
