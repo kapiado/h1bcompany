@@ -30,7 +30,7 @@ col1, col2, col3 = st.columns([1, 2, 1])
 
 # Display the image in the middle column
 with col2:
-    image = Image.open(path+'h1b-stress-visual.png')
+    image = Image.open(path+'h1b-stress-visual.jpg')
     st.image(image,width=300,caption='Figure 1: Stress Caused From H-1B Visa System')
 
 # Adding image with caption
