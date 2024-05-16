@@ -2,18 +2,18 @@
 # Import libraries
 import pandas as pd             # Pandas
 import streamlit as st          # Streamlit
-#import matplotlib.pyplot as plt # Matplotlib
-import seaborn as sns           # Seaborn
+# import matplotlib.pyplot as plt # Matplotlib
+# import seaborn as sns           # Seaborn
 
 # Module to save and load Python objects to and from files
-import pickle 
-import joblib
+# import pickle 
+# import joblib
 
 # Package to implement Random Forest Model
-import sklearn
-from sklearn.ensemble import RandomForestClassifier
-from sklearn import tree
-from sklearn.tree import DecisionTreeClassifier
+# import sklearn
+# from sklearn.ensemble import RandomForestClassifier
+# from sklearn import tree
+# from sklearn.tree import DecisionTreeClassifier
 
 
 import warnings
