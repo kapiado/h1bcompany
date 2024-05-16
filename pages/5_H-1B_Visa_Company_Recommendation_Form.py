@@ -2,7 +2,7 @@
 # Import libraries
 import pandas as pd             # Pandas
 import streamlit as st          # Streamlit
-import matplotlib.pyplot as plt # Matplotlib
+#import matplotlib.pyplot as plt # Matplotlib
 import seaborn as sns           # Seaborn
 
 # Module to save and load Python objects to and from files
