@@ -47,8 +47,10 @@ body2.write('The **absence of a reliable system** providing insights and recomme
 #new line and research objectives content
 st.write("")
 st.header('Research Objectives')
-st.write("1. Enhance **transparency**, **reliability**, and **predictability** in the immigration process for EB-2 future applicants.​")
-st.write("2. Implement **Machine Learning** models leveraging historical data to forecast green card processing times, providing applicants with **estimated wait times** from eligible priority date to approval of green card.")
+st.write("1. Develop and evaluate mathematical models to optimize the matching process between international candidates and potential employers for H-1B visa sponsorship.​")
+st.write("2. Assess the effectiveness and usability of the H-1B visa sponsor recommendation system through user testing, feedback analysis, and performance metrics evaluation.")
+st.write("3. Implement accessibility features and design enhancements on the recommendation system website to ensure it is user-friendly, culturally sensitive, and accommodating to the diverse needs of international applicants, regardless of language proficiency or technological familiarity.")
+
 #st.subheader('Descriptive')
 #st.write("We will create a novel analytical framework to address immigration issues and provide essential information for aspiring permanent residents in the US. These analytical frameworks will have a decision support system that people can leverage to make better decisions, with a data analytics page displaying trends and insights from immigration data, helping users understand the system and manage expectations.")
 # st.subheader('Predictive')
