@@ -48,6 +48,8 @@ if option == "No":
                 - Possess type of work authorization that does not require employer sponsorship (certain types of visas that allow unrestricted work rights)
                 """)
     
+# Add a horizontal line using HTML
+st.write("<hr>", unsafe_allow_html=True)
 
 st.header("What is H-1B Visa?")
 st.subheader("About the H-1B Visa Program")
@@ -62,8 +64,6 @@ with col1:
 
 # Add elements to the second column
 with col2:
-    body1 = st.empty()
-    body1.write("About the H-1B Visa Program")
     st.markdown("""
                 - H-1B visa program is a **non-immigrant visa category** in the United States
                 - Allow U.S. employers to **hire foreign workers in specialty occupations** that require theoretical or technical expertise
