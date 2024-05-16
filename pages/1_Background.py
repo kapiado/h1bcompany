@@ -20,7 +20,7 @@ col1, col2, col3 = st.columns([1, 2, 1])
 # Adding image with caption
 with col2:
     image = Image.open(path+'will-you-now-require-sponsorship.jpg')
-    st.image(image,caption='Figure 2: Question',width=400, height = 400)
+    st.image(image,caption='Figure 2: Question')
 
 option = st.radio(
     label = "Will you now or in the future require sponsorship to work in the U.S.?",
