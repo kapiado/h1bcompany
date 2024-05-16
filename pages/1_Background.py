@@ -8,7 +8,8 @@ st.subheader("How do you answer this job application question?")
 body1 = st.empty()
 body1.write("Will you now or in the future require sponsorship to work in the U.S.?")
 option = st.radio(
-    options = ("Yes","No")
+    label = "",
+    options = ("Yes","No"),
     index = None
 )
 
