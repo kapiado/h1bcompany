@@ -90,10 +90,17 @@ with col1:
 # Add elements to the second column
 with col2:
     image4 = Image.open(path+'contract_icon.png')
-    st.image(image4,caption='Possess the necessary academic credentials or work experience required for the position')
+    st.image(image4)
+    body3 = st.empty()
+    body3.write("**Academic/Work Credentials**")
+    body4 = st.empty()
+    body4.write('Possess the necessary academic credentials or work experience required for the position')
 
 # Add elements to the third column
 with col3:
     image5 = Image.open(path+'work_icon.png')
-    st.image(image5,caption='The job offered must pay at least the prevailing wage in the location where the work will be performed.')
- 
+    st.image(image5)
+    body5 = st.empty()
+    body5.write("**Prevailing Wage**")
+    body6 = st.empty()
+    body6.write('The job offered must pay at least the prevailing wage in the location where the work will be performed')
