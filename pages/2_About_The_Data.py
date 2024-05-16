@@ -25,7 +25,7 @@ with col1:
 
 # Add elements to the second column
 with col2:
-    image2 = Image.open(path+'Seal_of_the_United_States_Department_of_Labor.png')
+    image2 = Image.open(path+'US_DOL_logo.png')
     st.image(image2,caption='Figure 4: Seal of the United States Department of Labor')
 
 
@@ -51,7 +51,7 @@ with col1:
 
 # Add elements to the second column
 with col2:
-    image4 = Image.open(path+'Glassdoor-logo.png')
+    image4 = Image.open(path+'Glassdoor-Logo.png')
     st.image(image4,caption='Figure 6: Glassdoor Logo')
 
 body2 = st.empty()
