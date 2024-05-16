@@ -69,3 +69,31 @@ with col2:
                 - Allow U.S. employers to **hire foreign workers in specialty occupations** that require theoretical or technical expertise
                 - Enables companies to **temporarily** employ foreign professionals in occupations that typically **require a higher education degree**)
                 """)
+
+# Add a horizontal line using HTML
+st.write("<hr>", unsafe_allow_html=True)
+
+st.header("H-1B Visa Eligibility")
+
+# Create two columns with st.columns()
+col1, col2, col3 = st.columns(3)
+
+# Add elements to the first column
+with col1:
+    image3 = Image.open(path+'work_icon.png')
+    st.image(image3)
+    body1 = st.empty()
+    body1.write("**Job Offer**")
+    body2 = st.empty()
+    body2.write('Hold a job offer from a U.S. employer for a specialty occupation')
+
+# Add elements to the second column
+with col2:
+    image4 = Image.open(path+'contract_icon.png')
+    st.image(image4,caption='Possess the necessary academic credentials or work experience required for the position')
+
+# Add elements to the third column
+with col3:
+    image5 = Image.open(path+'work_icon.png')
+    st.image(image5,caption='The job offered must pay at least the prevailing wage in the location where the work will be performed.')
+ 
