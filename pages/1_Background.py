@@ -5,9 +5,14 @@ st.set_page_config(page_title="Background")
 st.write("# Background")
 
 st.subheader("How do you answer this job application question?")
-body1 = st.empty()
-body1.write("Will you now or in the future require sponsorship to work in the U.S.?")
+# body1 = st.empty()
+# body1.write("Will you now or in the future require sponsorship to work in the U.S.?")
+
+# Using HTML/CSS to style the radio button label
+st.write("<style> .radio-label { font-size: 20px; } </style>", unsafe_allow_html=True)
+
 option = st.radio(
+    label = "Will you now or in the future require sponsorship to work in the U.S.?",
     options = ("Yes","No"),
     index = None
 )
