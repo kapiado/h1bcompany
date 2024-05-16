@@ -20,7 +20,7 @@ col1, col2 = st.columns(2)
 
 # Add elements to the first column
 with col1:
-    image = Image.open(path+'USCIS_logo.png')
+    image = Image.open(path+'USCIS_2_logo.png')
     st.image(image,caption='Figure 3: USCIS Logo')
 
 # Add elements to the second column
@@ -51,7 +51,7 @@ with col1:
 
 # Add elements to the second column
 with col2:
-    image4 = Image.open(path+'Glassdoor-Logo.png')
+    image4 = Image.open(path+'Glassdoor_Logo.png')
     st.image(image4,caption='Figure 6: Glassdoor Logo')
 
 body2 = st.empty()
