@@ -1,12 +1,19 @@
 import streamlit as st
 import streamlit.components.v1 as components
 
+# Adding path to Images folder
+path = "Images/"
+
 st.set_page_config(page_title="Background")
 st.write("# Background")
 
 st.subheader("How do you answer this job application question?")
 # body1 = st.empty()
 # body1.write("Will you now or in the future require sponsorship to work in the U.S.?")
+
+image = Image.open(path+'will-you-now-require-sponsorship.jpg')
+st.image(image,caption='Figure 2: Question')
+
 
 option = st.radio(
     label = "Will you now or in the future require sponsorship to work in the U.S.?",
