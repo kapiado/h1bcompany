@@ -4,7 +4,7 @@ import streamlit.components.v1 as components
 st.set_page_config(page_title="Background")
 st.write("# Background")
 
-st.header("How do you answer this job application question?")
+st.subheader("How do you answer this job application question?")
 option = st.radio(
     label = "Will you now or in the future require sponsorship to work in the U.S.?",
     options = ("Yes","No"),
