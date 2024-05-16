@@ -20,12 +20,12 @@ col1, col2 = st.columns(2)
 
 # Add elements to the first column
 with col1:
-    image = Image.open(path+'USCIS_2_logo.png')
+    image = Image.open(path+'USCIS_logo.png')
     st.image(image,caption='Figure 3: USCIS Logo')
 
 # Add elements to the second column
 with col2:
-    image2 = Image.open(path+'US_DOL_logo.png')
+    image2 = Image.open(path+'Seal_of_the_United_States_Department_of_Labor.png')
     st.image(image2,caption='Figure 4: Seal of the United States Department of Labor')
 
 
