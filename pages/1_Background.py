@@ -12,9 +12,15 @@ st.subheader("How do you answer this job application question?")
 # body1 = st.empty()
 # body1.write("Will you now or in the future require sponsorship to work in the U.S.?")
 
-image = Image.open(path+'will-you-now-require-sponsorship.jpg')
-st.image(image,caption='Figure 2: Question',width=400)
+# Centered layout
+st.write("")
+col1, col2, col3 = st.columns([1, 2, 1])
 
+# Display the image in the middle column
+# Adding image with caption
+with col2:
+    image = Image.open(path+'will-you-now-require-sponsorship.jpg')
+    st.image(image,caption='Figure 2: Question',width=400)
 
 option = st.radio(
     label = "Will you now or in the future require sponsorship to work in the U.S.?",
