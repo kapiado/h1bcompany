@@ -23,6 +23,9 @@ path = "Images/"
 
 # Page title
 st.write("# Data-Driven Decision Support System for International Job Applicants")
+st.caption("A Master Project submitted to the Faculty of California Polytechnic State University, San Luis Obispo")
+st.caption("In Partial Fulfillment of the Requirements for the Degree of Master of Science in Engineering Management")
+st.caption("By Katrina Apiado")
 
 # Centered layout
 st.write("")
