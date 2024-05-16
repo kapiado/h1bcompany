@@ -74,6 +74,7 @@ with col2:
 st.write("<hr>", unsafe_allow_html=True)
 
 st.header("H-1B Visa Eligibility")
+st.write("")
 
 # Create two columns with st.columns()
 col1, col2, col3 = st.columns(3)
