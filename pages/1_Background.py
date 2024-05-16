@@ -11,7 +11,8 @@ option = st.radio(
     index = None
 )
 
-st.write("The following may be true in your case:")
+body1 = st.empty()
+body1.write("The following may be true in your case:")
 if option == "Yes":
     #st.write("Currently do not possess the necessary work authorization (such as a U.S. work visa) to legally work in the U.S.")
     st.markdown("""
