@@ -13,7 +13,7 @@ st.subheader("How do you answer this job application question?")
 # body1.write("Will you now or in the future require sponsorship to work in the U.S.?")
 
 image = Image.open(path+'will-you-now-require-sponsorship.jpg')
-st.image(image,caption='Figure 2: Question')
+st.image(image,caption='Figure 2: Question',width=400)
 
 
 option = st.radio(
