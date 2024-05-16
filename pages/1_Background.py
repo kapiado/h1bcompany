@@ -31,21 +31,21 @@ body2.write("The following may be true in your case:")
 if option == "Yes":
     #st.write("Currently do not possess the necessary work authorization (such as a U.S. work visa) to legally work in the U.S.")
     st.markdown("""
-                - Currently do not possess the necessary work authorization (such as a U.S. work visa) to legally work in the U.S.
+                - Currently do not possess the necessary work authorization (such as a U.S. work visa) to legally work in the U.S. :large_red_square:
                 
                 **AND**
 
-                - Need the company's assistance in obtaining the required visa or work permit
+                - Need the company's assistance in obtaining the required visa or work permit :card_file_box:
                 """)
 
 if option == "No":
     st.markdown("""
-                - U.S. citizen
-                - A permanent resident (Green Card holder)
+                - U.S. citizen :flag-us:
+                - A permanent resident (Green Card holder) :large_green_square:
 
                 **OR**
 
-                - Possess type of work authorization that does not require employer sponsorship (certain types of visas that allow unrestricted work rights)
+                - Possess type of work authorization that does not require employer sponsorship (certain types of visas that allow unrestricted work rights) :file_folder:
                 """)
     
 # Add a horizontal line using HTML
