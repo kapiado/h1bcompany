@@ -5,14 +5,15 @@ st.set_page_config(page_title="Background")
 st.write("# Background")
 
 st.subheader("How do you answer this job application question?")
+body1 = st.empty()
+body1.write("Will you now or in the future require sponsorship to work in the U.S.?")
 option = st.radio(
-    label = "Will you now or in the future require sponsorship to work in the U.S.?",
-    options = ("Yes","No"),
+    options = ("Yes","No")
     index = None
 )
 
-body1 = st.empty()
-body1.write("The following may be true in your case:")
+body2 = st.empty()
+body2.write("The following may be true in your case:")
 if option == "Yes":
     #st.write("Currently do not possess the necessary work authorization (such as a U.S. work visa) to legally work in the U.S.")
     st.markdown("""
