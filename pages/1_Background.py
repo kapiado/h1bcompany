@@ -14,7 +14,8 @@ st.write("<style> .radio-label { font-size: 20px; } </style>", unsafe_allow_html
 option = st.radio(
     label = "Will you now or in the future require sponsorship to work in the U.S.?",
     options = ("Yes","No"),
-    index = None
+    index = None,
+    format_func=lambda x: f'<span class="radio-label">{x}</span>'
 )
 
 body2 = st.empty()
