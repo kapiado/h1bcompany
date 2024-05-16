@@ -59,5 +59,6 @@ st.write("3. Implement accessibility features and design enhancements on the rec
 #new line and team intro
 st.write("")
 st.header('The Team')
-st.write('**Team Members:** Katrina Apiado, Jordan Anthony Costa, Ryan Keany')
+st.write('**Team Members:** Katrina Apiado, Ryan Keany')
+st.write('**Cal Poly Computer Science Research Fellows:** Jordan Anthony Costa, Dr. Joydeep Mukherjee')
 st.write('**Advisor:** Dr. Puneet Agarwal')
