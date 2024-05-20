@@ -85,7 +85,10 @@ with st.form(key='my_form'):
 ], 
                              help = "Select the U.S. state of primary worksite")
 
-    employeenumInfo = st.number_input('Number of Employees at Company', min_value = 0)
+    #employeenumInfo = st.number_input('Number of Employees at Company', min_value = 0)
+    employeenumInfo = st.selectbox('Number of Employees at Company', ['<50', '51-200', '201-500'
+                                                                      '501-1000', '1001-5000',
+                                                                      '5001-10000', '10000+'])
 
     companyageInfo = st.selectbox('Age Category',
                                   ['Newly Established (0-2 years)','Early Stage (2-5 years)',
