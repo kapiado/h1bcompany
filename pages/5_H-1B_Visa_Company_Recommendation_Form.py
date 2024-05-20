@@ -34,6 +34,11 @@ st.write("This app recommends companies that are likely to sponsor an H-1B visa 
 # rf_model = pickle.load(rf_pickle) 
 # rf_pickle.close() 
 
+# SOC TITLE
+# WORKSITE STATE
+# SECTOR CODE
+# EMPLOYEE COUNT CATEGORY
+# COMPANY AGE CATEGORY
 
     # Some code
 with st.form(key='my_form'):
@@ -66,42 +71,6 @@ with st.form(key='my_form'):
 # To get the selected value from the select box
     codeInfo = st.selectbox('NAICS Code', codeOptions, help="Select most appropriate Industry Code as found here https://www.census.gov/naics/?58967?yearbck=2022")
 
-    # Initialize variables for NAICS Codes
-# Assign numerical values based on specific strings in the NAICS Code
-    education_options = [
-"High School", "Associate's", "Bachelor's", "Doctorate", 
-"Master's", "None", "Other"
-]
-    # was job education -- how to address this since this is the education required by the job
-    educationInfo = st.selectbox('Highest Completed Education Level', options=education_options) 
-    
-    wage_levels = ["Level I", "Level II", "Level III", "Level IV"]
-    wagelevelInfo = st.selectbox('Prevailing Wage Level', wage_levels, help = "Select most appropriate prevailing wage level")
-
-    wageamountInfo = st.number_input('Prevailing Wage Amount', min_value = 0)
-    admiclasses = [
-"A-3", "A1/A2", "B-1", "B-2", "C-1", "C-3", "CW-1", "D-1", "D-2", 
-"E-1", "E-2", "E-3", "EWI", "F-1", "F-2", "G-1", "G-4", "G-5", 
-"H-1A", "H-1B", "H-1B1", "H-2A", "H-2B", "H-3", "H-4", "I", 
-"J-1", "J-2", "K-4", "L-1", "L-2", "M-1", "M-2", "N", "Not in USA", 
-"O-1", "O-2", "O-3", "P-1", "P-3", "P-4", "Parolee", "Q", 
-"R-1", "R-2", "T-1", "T-2", "TD", "TN", "TPS", "U-1", "V-2", 
-"VWB", "VWT"
-]
-
-    admiclassInfo = st.selectbox('Class of Admission', admiclasses)
-    
-    countryInfo = st.selectbox('Country of Citizenship', options=[
-"ARGENTINA", "AUSTRALIA", "BANGLADESH", "BELARUS", "BRAZIL", 
-"BULGARIA", "CANADA", "CHILE", "CHINA", "COLOMBIA", "ECUADOR", 
-"EGYPT", "FRANCE", "GERMANY", "GREECE", "HONG KONG", "INDIA", 
-"INDONESIA", "IRAN", "IRELAND", "ISRAEL", "ITALY", "JAPAN", 
-"JORDAN", "LEBANON", "MALAYSIA", "MEXICO", "NEPAL", "NETHERLANDS", 
-"NIGERIA", "PAKISTAN", "PERU", "PHILIPPINES", "POLAND", "ROMANIA", 
-"RUSSIA", "SINGAPORE", "SOUTH AFRICA", "SOUTH KOREA", "SPAIN", 
-"SRI LANKA", "SWEDEN", "SYRIA", "TAIWAN", "THAILAND", "TURKEY", 
-"UKRAINE", "UNITED KINGDOM", "VENEZUELA", "VIETNAM"
-])
 
     stateInfo = st.selectbox('U.S. Work State',
                                                   [
@@ -118,22 +87,13 @@ with st.form(key='my_form'):
 
     employeenumInfo = st.number_input('Number of Employees at Company', min_value = 0)
 
-
-    jobeducation_options = [
-"High School", "Associate's", "Bachelor's", "Doctorate", 
-"Master's", "None", "Other"] 
-    # was job education -- how to address this since this is the education required by the job
-    jobeducationInfo = st.selectbox('Education Level Required by Job', options=jobeducation_options) 
-
-    expInfo = st.radio('Do you have job/industry experience?', options=["Yes","No"])
-    
-    expmonthsInfo = st.number_input('Months of Experience', min_value = 0, help = "Input how many months of job experience you have")
-    
-    layoffInfo =  st.radio('Have you been affected from layoff(s) in the past six months?', options =["Yes","No"])
-
+    companyageInfo = st.selectbox('Age Category',
+                                  ['Newly Established (0-2 years)','Early Stage (2-5 years)',
+                                   'Growth Stage (5-10 years)','Mature Stage (10-20 years)',
+                                   'Established Stage (20-50 years)', 'Legacy Stage (50+ years)'])
 
     submit = st.form_submit_button('Submit',args=(1,
-                    [codeInfo, wagelevelInfo, wageamountInfo, stateInfo, countryInfo, employeenumInfo,  admiclassInfo,  jobeducationInfo, expInfo, expmonthsInfo, layoffInfo, educationInfo]))
+                    [codeInfo, stateInfo, employeenumInfo, companyageInfo]))
 
 # df3 = df2.copy()
 # df3.loc[len(df3)] = [codeInfo, wagelevelInfo, wageamountInfo, stateInfo, countryInfo, employeenumInfo,  admiclassInfo,  jobeducationInfo, expInfo, expmonthsInfo, layoffInfo, educationInfo]
