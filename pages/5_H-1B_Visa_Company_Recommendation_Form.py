@@ -81,8 +81,30 @@ with st.form(key='my_form'):
     codeInfo = st.selectbox('Sector Code', codeOptions, help="Select most appropriate Industry Code as found here https://www.census.gov/naics/?58967?yearbck=2022")
 
 
+    # have them choose the weights
+    # 1 - 5
+
+    # take the number assignemt, 2/5
+    # add up all numbers and then divide number they chose over the total amount = 1
+    # input "X" = Xi/SUM(all X) for all Xi
+    # each value over the sum of all the values
+    # x = 3
+    # y = 5
+    # z = 2
+    # sum = 10
+    # xnorm = 3/10
+    # ynorm = 5/10
+    # znorm = 2/10
+
+    # ranking states
+    # make a list
+
+    # key to dictionary is column and value is a list
+    # needs to be 
 
 
+    # ranking, enabling them to choose multiple options
+    # Need to abbreviate these states
     stateInfo = st.selectbox('U.S. Work State',
                                                   [
     'ALABAMA', 'ALASKA', 'ARIZONA', 'ARKANSAS', 'CALIFORNIA', 'COLORADO', 'CONNECTICUT', 'DELAWARE',
