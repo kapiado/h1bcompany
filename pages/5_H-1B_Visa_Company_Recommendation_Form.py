@@ -40,6 +40,15 @@ st.write("This app recommends companies that are likely to sponsor an H-1B visa 
 # EMPLOYEE COUNT CATEGORY
 # COMPANY AGE CATEGORY
 
+# Connect to the Google Sheet
+sheet_id = "1oLjpm4KLNj-tUN_Pnbrk_ihU7bNylJwG"
+sheet_name = "Final"
+url = f"<https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}>"
+df = pd.read_csv(url, dtype=str).fillna("")
+
+# Show the dataframe (we'll delete this later)
+st.write(df)
+
     # Some code
 with st.form(key='my_form'):
     codeOptions = ['11 - Agriculture, Forestry, Fishing and Hunting', 
@@ -69,7 +78,9 @@ with st.form(key='my_form'):
     
 
 # To get the selected value from the select box
-    codeInfo = st.selectbox('NAICS Code', codeOptions, help="Select most appropriate Industry Code as found here https://www.census.gov/naics/?58967?yearbck=2022")
+    codeInfo = st.selectbox('Sector Code', codeOptions, help="Select most appropriate Industry Code as found here https://www.census.gov/naics/?58967?yearbck=2022")
+
+
 
 
     stateInfo = st.selectbox('U.S. Work State',
