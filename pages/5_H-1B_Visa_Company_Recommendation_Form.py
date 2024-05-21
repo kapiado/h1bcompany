@@ -290,7 +290,7 @@ user_preferences = {
     'WORKSITE_STATE': stateInfo,
     'SECTOR_CODE': codeInfo,
     'EMPLOYEE_COUNT_CATEGORY': employeenumInfo,
-    'COMPANY_AGE_CATEGORY': companyageInfo,
+    'COMPANY_AGE_CATEGORY': companyageInfo
 } 
 
 # column weights
@@ -301,7 +301,7 @@ weights = {
     'PREVAILING_WAGE_ANNUAL': .1,
     'SECTOR_CODE': .1,
     'EMPLOYEE_COUNT_CATEGORY': .05,
-    'COMPANY_AGE_CATEGORY': .05,
+    'COMPANY_AGE_CATEGORY': .05
 }
 # df3 = df2.copy()
 # df3.loc[len(df3)] = [codeInfo, wagelevelInfo, wageamountInfo, stateInfo, countryInfo, employeenumInfo,  admiclassInfo,  jobeducationInfo, expInfo, expmonthsInfo, layoffInfo, educationInfo]
