@@ -106,6 +106,10 @@ sheet_id = "1oLjpm4KLNj-tUN_Pnbrk_ihU7bNylJwG"
 sheet_name = "Final"
 url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}"
 df = pd.read_csv(url, dtype=str).fillna("")
+
+# Remove leading and trailing whitespaces in all columns
+df["OCCUPATION"] = df["OCCUPATION"].applymap(lambda x: x.strip() if isinstance(x, str) else x)
+
 df = df.drop_duplicates(subset=["OCCUPATION"])
 st.write(df)
 
