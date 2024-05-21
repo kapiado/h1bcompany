@@ -120,7 +120,7 @@ st.write(df)
 with st.form(key='my_form'):
 
     # Use a text_input to get the keywords to filter the dataframe
-    text_search = st.text_input("Search for SOC Title")
+    text_search = st.text_input("Search for SOC Title", help = "Type here to retrieve results in dropdown menu below.")
     # Filter the DataFrame based on the search input
     filtered_df = df[df["OCCUPATION"].str.contains(text_search, case=False, na=False)]
 
