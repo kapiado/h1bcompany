@@ -216,7 +216,7 @@ with st.form(key='my_form'):
     submit = st.form_submit_button('Submit',args=(1,
                     [codeInfo, stateInfo, employeenumInfo, companyageInfo]))
 
-if submit_button:
+if submit:
     if len(codeInfo) > MAX_SELECTIONS:
         st.error(f"Please select up to {MAX_SELECTIONS} states only.")
     else:
