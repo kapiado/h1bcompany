@@ -25,69 +25,69 @@ st.title('H-1B Visa Company Recommendation Form')
 st.write("This app recommends companies that are likely to sponsor an H-1B visa based on your user input. Use the form below to get started!")
          #uses *x* inputs to determine companies that would be a good fit for you to apply for. Use the form below to get started!")
 
-# df_original = pd.read_csv("merged_data_5_16_24.csv")
+df_original = pd.read_csv("merged_data_5_16_24.csv")
 
-# # create copy of compete dataframe to be manipulated
-# df_cleaned = df_original.copy()
-# df_cleaned.info()
+# create copy of compete dataframe to be manipulated
+df_cleaned = df_original.copy()
+df_cleaned.info()
 
-# # Select only the relevant columns
-# columns_list = [
-#     'EMPLOYER_NAME_CLEAN',
-#     'EMPLOYER_NAME',
-#     'SOC_TITLE',
-#     'WORKSITE_STATE',
-#     'PREVAILING_WAGE_ANNUAL',
-#     'SECTOR_CODE',
-#     'EMPLOYEE_COUNT_CATEGORY',
-#     'COMPANY_AGE',
-#     'COMPANY_LINK',
-#     'SPONSORED_2012.0',
-#     'SPONSORED_2013.0',
-#     'SPONSORED_2014.0',
-#     'SPONSORED_2015.0',
-#     'SPONSORED_2016.0',
-#     'SPONSORED_2017.0',
-#     'SPONSORED_2018.0',
-#     'SPONSORED_2019.0',
-#     'SPONSORED_2020.0',
-#     'SPONSORED_2021.0',
-#     'SPONSORED_2022.0',
-#     'SPONSORED_2023.0',
-#     'SPONSORED_2024.0'
-# ]
-# df_cleaned = df_cleaned.loc[:, columns_list]
+# Select only the relevant columns
+columns_list = [
+    'EMPLOYER_NAME_CLEAN',
+    'EMPLOYER_NAME',
+    'SOC_TITLE',
+    'WORKSITE_STATE',
+    'PREVAILING_WAGE_ANNUAL',
+    'SECTOR_CODE',
+    'EMPLOYEE_COUNT_CATEGORY',
+    'COMPANY_AGE',
+    'COMPANY_LINK',
+    'SPONSORED_2012.0',
+    'SPONSORED_2013.0',
+    'SPONSORED_2014.0',
+    'SPONSORED_2015.0',
+    'SPONSORED_2016.0',
+    'SPONSORED_2017.0',
+    'SPONSORED_2018.0',
+    'SPONSORED_2019.0',
+    'SPONSORED_2020.0',
+    'SPONSORED_2021.0',
+    'SPONSORED_2022.0',
+    'SPONSORED_2023.0',
+    'SPONSORED_2024.0'
+]
+df_cleaned = df_cleaned.loc[:, columns_list]
 
-# # sponsorship year weights
-# sponsorship_weights = {
-#     'SPONSORED_2012.0': 0.0294,
-#     'SPONSORED_2013.0': 0.0294,
-#     'SPONSORED_2014.0': 0.0294,
-#     'SPONSORED_2015.0': 0.0294,
-#     'SPONSORED_2016.0': 0.0588,
-#     'SPONSORED_2017.0': 0.0588,
-#     'SPONSORED_2018.0': 0.0588,
-#     'SPONSORED_2019.0': 0.0882,
-#     'SPONSORED_2020.0': 0.0882,
-#     'SPONSORED_2021.0': 0.0882,
-#     'SPONSORED_2022.0': 0.1471,
-#     'SPONSORED_2023.0': 0.1471,
-#     'SPONSORED_2024.0': 0.1471
-# }
+# sponsorship year weights
+sponsorship_weights = {
+    'SPONSORED_2012.0': 0.0294,
+    'SPONSORED_2013.0': 0.0294,
+    'SPONSORED_2014.0': 0.0294,
+    'SPONSORED_2015.0': 0.0294,
+    'SPONSORED_2016.0': 0.0588,
+    'SPONSORED_2017.0': 0.0588,
+    'SPONSORED_2018.0': 0.0588,
+    'SPONSORED_2019.0': 0.0882,
+    'SPONSORED_2020.0': 0.0882,
+    'SPONSORED_2021.0': 0.0882,
+    'SPONSORED_2022.0': 0.1471,
+    'SPONSORED_2023.0': 0.1471,
+    'SPONSORED_2024.0': 0.1471
+}
 
-# # combine the number of sponsored visas per year into one columns
-# df_cleaned['SPONSORED'] = 0.0
+# combine the number of sponsored visas per year into one columns
+df_cleaned['SPONSORED'] = 0.0
 
-# for col, weight in sponsorship_weights.items():
-#     df_cleaned['SPONSORED'] += df_cleaned[col] * weight
+for col, weight in sponsorship_weights.items():
+    df_cleaned['SPONSORED'] += df_cleaned[col] * weight
     
-# df_cleaned['SPONSORED'] = df_cleaned['SPONSORED'].round()
+df_cleaned['SPONSORED'] = df_cleaned['SPONSORED'].round()
 
-# # drop all the sponsored counts columns besides the combined value
-# columns_to_drop = list(sponsorship_weights.keys())
-# columns_to_drop.remove('SPONSORED_2023.0')
-# df_cleaned.drop(columns=columns_to_drop, inplace=True)
-# df2.drop(['WAITING_TIMERANGE'], axis=1, inplace=True)
+# drop all the sponsored counts columns besides the combined value
+columns_to_drop = list(sponsorship_weights.keys())
+columns_to_drop.remove('SPONSORED_2023.0')
+df_cleaned.drop(columns=columns_to_drop, inplace=True)
+df2.drop(['WAITING_TIMERANGE'], axis=1, inplace=True)
 
 
 # # Loading model and mapping pickle files
@@ -118,19 +118,14 @@ st.write(df)
 #MAX_SELECTIONS = 3
     # Some code
 with st.form(key='my_form'):
-
+    st.subheader("Selections")
     # Use a text_input to get the keywords to filter the dataframe
     text_search = st.text_input("Search for SOC Title", help = "Type here to retrieve results in dropdown menu below.")
     # Filter the DataFrame based on the search input
     filtered_df = df[df["OCCUPATION"].str.contains(text_search, case=False, na=False)]
 
     # Display search results
-    titleInfo = st.multiselect("Select SOC Titles", options=filtered_df["OCCUPATION"].tolist())
-
-    selected_titles = titleInfo
-
-    # Store selected titles in a Python list
-    st.write("Selected SOC Titles:", selected_titles)
+    titleInfo = st.multiselect("Select SOC Title(s)", options=filtered_df["OCCUPATION"].tolist())
 
     # all codes
     codeOptions = ['11 - Agriculture, Forestry, Fishing and Hunting', 
@@ -184,7 +179,7 @@ with st.form(key='my_form'):
     
 # To get the selected value from the select box
     # codeInfo = st.selectbox('Select industry (up to 3)', codeOptions2, help="Select most appropriate Industry Code as found here https://www.census.gov/naics/?58967?yearbck=2022")
-    codeInfo = st.multiselect('Select industry', codeOptions2, help="Select most appropriate Industry Code as found here https://www.census.gov/naics/?58967?yearbck=2022")
+    codeInfo = st.multiselect('Select industry/industries', codeOptions2, help="Select most appropriate Industry Code as found here https://www.census.gov/naics/?58967?yearbck=2022")
 
     # have them choose the weights
     # 1 - 5
@@ -229,7 +224,7 @@ with st.form(key='my_form'):
     # stateInfo = st.selectbox('U.S. Work State', state_abbreviations, 
     #                          help = "Select the U.S. state of primary worksite")
     
-    stateInfo = st.multiselect('Select U.S. Work State (up to 3)', state_abbreviations, help="Select most appropriate Industry Code as found here https://www.census.gov/naics/?58967?yearbck=2022")
+    stateInfo = st.multiselect('Select U.S. Work State(s)', state_abbreviations, help="Select most appropriate Industry Code as found here https://www.census.gov/naics/?58967?yearbck=2022")
 
 
     employeenum_categories = ['<50', '51-200', '201-500', '501-1000', 
@@ -237,17 +232,40 @@ with st.form(key='my_form'):
     #employeenumInfo = st.number_input('Number of Employees at Company', min_value = 0)
     # employeenumInfo = st.selectbox('Number of Employees at Company', employeenum_categories)
 
-    employeenumInfo = st.multiselect('Select Company Size (up to 3)', employeenum_categories)
+    employeenumInfo = st.multiselect('Select Company Size(s)', employeenum_categories)
 
     companyage_categories = ['Newly Established (0-2 years)','Early Stage (2-5 years)',
                                    'Growth Stage (5-10 years)','Mature Stage (10-20 years)',
                                    'Established Stage (20-50 years)', 'Legacy Stage (50+ years)']
 
     # companyageInfo = st.select_slider('Age Category', companyage_categories)
-    companyageInfo = st.multiselect('Select Company Age (up to 3)', companyage_categories)
+    companyageInfo = st.multiselect('Select Company Age(s)', companyage_categories)
+
+    ### Ranking to apply weights to categories
+    # Define the label for the slider
+    st.subheader("Weights of Importance")
+    label = "Select importance level"
+
+# Define the custom labels for the slider endpoints
+    custom_labels = {1: "Not important at all", 5: "Most important"}
+
+    # Create the select slider
+    titleWeight = st.slider(
+        label,
+        min_value=1,
+        max_value=5,
+        value=(1, 5),  # Initial value
+        step=1,
+        format="%d",  # Format as integers
+        format_func=lambda x: custom_labels.get(x)
+    )
+
+    # Display the selected importance level
+    st.write("Selected importance level:", titleWeight)
+
 
     submit = st.form_submit_button('Submit',args=(1,
-                    [codeInfo, stateInfo, employeenumInfo, companyageInfo]))
+                    [titleInfo,codeInfo, stateInfo, employeenumInfo, companyageInfo]))
 
 ## Code for MAX_SELECTIONS, selections constraint
 # if submit:
@@ -268,7 +286,7 @@ with st.form(key='my_form'):
         
 # user preferences
 user_preferences = {
-    'SOC_TITLE': ['COMPUTER SYSTEMS ANALYST', 'COMPUTER PROGRAMMER', 'ECONOMISTS'],
+    'SOC_TITLE': titleInfo,
     'WORKSITE_STATE': stateInfo,
     'SECTOR_CODE': codeInfo,
     'EMPLOYEE_COUNT_CATEGORY': employeenumInfo,
