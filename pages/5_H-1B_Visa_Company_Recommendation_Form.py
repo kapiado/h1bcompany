@@ -111,9 +111,19 @@ st.write(df)
 
 # # Show the dataframe (we'll delete this later)
 # st.write(df)
-MAX_SELECTIONS = 3
+#MAX_SELECTIONS = 3
     # Some code
 with st.form(key='my_form'):
+
+    # Use a text_input to get the keywords to filter the dataframe
+    text_search = st.text_input("Search for SOC Title", value="")
+    m1 = df["OCCUPATION"].str.contains(text_search)
+    df_search = df[m1]
+
+    # Show the results, if you have a text_search
+    if text_search:
+        st.write(df_search)
+
     # all codes
     codeOptions = ['11 - Agriculture, Forestry, Fishing and Hunting', 
                    '21 - Mining, Quarrying, and Oil and Gas Extraction', 
@@ -166,7 +176,7 @@ with st.form(key='my_form'):
     
 # To get the selected value from the select box
     # codeInfo = st.selectbox('Select industry (up to 3)', codeOptions2, help="Select most appropriate Industry Code as found here https://www.census.gov/naics/?58967?yearbck=2022")
-    codeInfo = st.multiselect('Select industry (up to 3)', codeOptions2, help="Select most appropriate Industry Code as found here https://www.census.gov/naics/?58967?yearbck=2022")
+    codeInfo = st.multiselect('Select industry', codeOptions2, help="Select most appropriate Industry Code as found here https://www.census.gov/naics/?58967?yearbck=2022")
 
     # have them choose the weights
     # 1 - 5
@@ -231,21 +241,22 @@ with st.form(key='my_form'):
     submit = st.form_submit_button('Submit',args=(1,
                     [codeInfo, stateInfo, employeenumInfo, companyageInfo]))
 
-if submit:
-    if len(codeInfo) > MAX_SELECTIONS:
-        st.error(f"Please select up to {MAX_SELECTIONS} industries only.")
-    if len(stateInfo) > MAX_SELECTIONS:
-        st.error(f"Please select up to {MAX_SELECTIONS} states only.")
-    if len(employeenumInfo) > MAX_SELECTIONS:
-        st.error(f"Please select up to {MAX_SELECTIONS} company size categories only.")
-    if len(companyageInfo) > MAX_SELECTIONS:
-        st.error(f"Please select up to {MAX_SELECTIONS} company age categories only.")
-    if len(codeInfo) <= MAX_SELECTIONS and len(stateInfo) <= MAX_SELECTIONS and len(employeenumInfo) <= MAX_SELECTIONS and len(companyageInfo) <= MAX_SELECTIONS:
-        # Sort the selected states and cities
-        selected_codes_sorted = sorted(codeInfo)
-        selected_states_sorted = sorted(stateInfo)
-        selected_empnum_sorted = sorted(employeenumInfo)
-        selected_compage_sorted = sorted(companyageInfo)
+## Code for MAX_SELECTIONS, selections constraint
+# if submit:
+#     if len(codeInfo) > MAX_SELECTIONS:
+#         st.error(f"Please select up to {MAX_SELECTIONS} industries only.")
+#     if len(stateInfo) > MAX_SELECTIONS:
+#         st.error(f"Please select up to {MAX_SELECTIONS} states only.")
+#     if len(employeenumInfo) > MAX_SELECTIONS:
+#         st.error(f"Please select up to {MAX_SELECTIONS} company size categories only.")
+#     if len(companyageInfo) > MAX_SELECTIONS:
+#         st.error(f"Please select up to {MAX_SELECTIONS} company age categories only.")
+#     if len(codeInfo) <= MAX_SELECTIONS and len(stateInfo) <= MAX_SELECTIONS and len(employeenumInfo) <= MAX_SELECTIONS and len(companyageInfo) <= MAX_SELECTIONS:
+#         # Sort the selected states and cities
+#         selected_codes_sorted = sorted(codeInfo)
+#         selected_states_sorted = sorted(stateInfo)
+#         selected_empnum_sorted = sorted(employeenumInfo)
+#         selected_compage_sorted = sorted(companyageInfo)
         
 # user preferences
 user_preferences = {
