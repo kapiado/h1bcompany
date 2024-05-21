@@ -116,13 +116,16 @@ st.write(df)
 with st.form(key='my_form'):
 
     # Use a text_input to get the keywords to filter the dataframe
-    text_search = st.text_input("Search for SOC Title", value="")
-    m1 = df["OCCUPATION"].str.contains(text_search)
-    df_search = df[m1]
+    text_search = st.text_input("Search for SOC Title")
+    # Filter the DataFrame based on the search input
+    filtered_df = df[df["OCCUPATION"].str.contains(text_search, case=False, na=False)]
 
-    # Show the results, if you have a text_search
-    if text_search:
-        st.write(df_search)
+    # Display search results
+    titleInfo = st.multiselect("Select SOC Titles", options=filtered_df["OCCUPATION"].tolist())
+
+
+    # Store selected titles in a Python list
+    st.write("Selected SOC Titles:", titleInfo)
 
     # all codes
     codeOptions = ['11 - Agriculture, Forestry, Fishing and Hunting', 
