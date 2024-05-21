@@ -101,13 +101,13 @@ st.write("This app recommends companies that are likely to sponsor an H-1B visa 
 # EMPLOYEE COUNT CATEGORY
 # COMPANY AGE CATEGORY
 
-# # Connect to the Google Sheet of SOC TITLEs
-# sheet_id = "1oLjpm4KLNj-tUN_Pnbrk_ihU7bNylJwG"
-# sheet_name = "Final"
-# url = f"<https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}>"
-# df = pd.read_csv(url, dtype=str).fillna("")
+# Connect to the Google Sheet of SOC TITLEs
+sheet_id = "1oLjpm4KLNj-tUN_Pnbrk_ihU7bNylJwG"
+sheet_name = "Final"
+url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}"
+df = pd.read_csv(url, dtype=str).fillna("")
 
-
+st.write(df)
 
 # # Show the dataframe (we'll delete this later)
 # st.write(df)
