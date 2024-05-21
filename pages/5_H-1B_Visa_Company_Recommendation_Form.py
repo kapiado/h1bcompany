@@ -169,7 +169,7 @@ with st.form(key='my_form'):
     codeInfo = st.multiselect('Select industry (up to 3)', codeOptions2, help="Select most appropriate Industry Code as found here https://www.census.gov/naics/?58967?yearbck=2022")
 
     if len(selected_states) > MAX_SELECTIONS:
-    st.error(f"Please select up to {MAX_SELECTIONS} states only.")
+        st.error(f"Please select up to {MAX_SELECTIONS} states only.")
     selected_states = selected_states[:MAX_SELECTIONS]
     # have them choose the weights
     # 1 - 5
