@@ -111,7 +111,7 @@ st.write("This app recommends companies that are likely to sponsor an H-1B visa 
 
 # # Show the dataframe (we'll delete this later)
 # st.write(df)
-
+MAX_SELECTIONS = 3
     # Some code
 with st.form(key='my_form'):
     # all codes
@@ -163,14 +163,11 @@ with st.form(key='my_form'):
                    '81 - Other Services (except Public Administration)',
                    ]
     
-    MAX_SELECTIONS = 3
+    
 # To get the selected value from the select box
     # codeInfo = st.selectbox('Select industry (up to 3)', codeOptions2, help="Select most appropriate Industry Code as found here https://www.census.gov/naics/?58967?yearbck=2022")
     codeInfo = st.multiselect('Select industry (up to 3)', codeOptions2, help="Select most appropriate Industry Code as found here https://www.census.gov/naics/?58967?yearbck=2022")
 
-    if len(selected_states) > MAX_SELECTIONS:
-        st.error(f"Please select up to {MAX_SELECTIONS} states only.")
-    selected_states = selected_states[:MAX_SELECTIONS]
     # have them choose the weights
     # 1 - 5
 
@@ -219,7 +216,14 @@ with st.form(key='my_form'):
     submit = st.form_submit_button('Submit',args=(1,
                     [codeInfo, stateInfo, employeenumInfo, companyageInfo]))
 
-
+if submit_button:
+    if len(codeInfo) > MAX_SELECTIONS:
+        st.error(f"Please select up to {MAX_SELECTIONS} states only.")
+    else:
+        # Sort the selected states
+        selected_codes_sorted = sorted(codeInfo)
+        # Display the selected states in order
+        st.write("You selected (sorted):", selected_states_sorted)
 # user preferences
 user_preferences = {
     'SOC_TITLE': ['COMPUTER SYSTEMS ANALYST', 'COMPUTER PROGRAMMER', 'ECONOMISTS'],
