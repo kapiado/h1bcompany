@@ -189,48 +189,71 @@ with st.form(key='my_form'):
     # key to dictionary is column and value is a list
     # needs to be 
 
+#     state_abbreviations = [
+#     "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", 
+#     "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", 
+#     "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", 
+#     "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", 
+#     "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
+# ]
+
     state_abbreviations = [
-    "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", 
-    "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", 
-    "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", 
-    "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", 
-    "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
+    "AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DC", "DE", "DISTRICT OF COLUMBIA",
+    "FL", "FM", "GA", "GU", "GUAM", "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA",
+    "MA", "MD", "ME", "MH", "MI", "MN", "MO", "MP", "MS", "MT", "NC", "ND", "NE",
+    "NH", "NJ", "NM", "NV", "NY", "OH", "OK", "OR", "PA", "PR", "PUERTO RICO", "PW",
+    "RI", "SC", "SD", "TN", "TX", "UT", "VA", "VI", "VIRGIN ISLANDS", "VT", "WA",
+    "WI", "WV", "WY"
 ]
 
     # ranking, enabling them to choose multiple options
     # Need to abbreviate these states
-    stateInfo = st.selectbox('U.S. Work State', state_abbreviations, 
-                             help = "Select the U.S. state of primary worksite")
+    # stateInfo = st.selectbox('U.S. Work State', state_abbreviations, 
+    #                          help = "Select the U.S. state of primary worksite")
+    
+    stateInfo = st.multiselect('Select U.S. Work State (up to 3)', state_abbreviations, help="Select most appropriate Industry Code as found here https://www.census.gov/naics/?58967?yearbck=2022")
+
 
     employeenum_categories = ['<50', '51-200', '201-500', '501-1000', 
                               '1001-5000','5001-10000', '10000+']
     #employeenumInfo = st.number_input('Number of Employees at Company', min_value = 0)
-    employeenumInfo = st.selectbox('Number of Employees at Company', employeenum_categories)
+    # employeenumInfo = st.selectbox('Number of Employees at Company', employeenum_categories)
+
+    employeenumInfo = st.multiselect('Select Company Size (up to 3)', employeenum_categories)
 
     companyage_categories = ['Newly Established (0-2 years)','Early Stage (2-5 years)',
                                    'Growth Stage (5-10 years)','Mature Stage (10-20 years)',
                                    'Established Stage (20-50 years)', 'Legacy Stage (50+ years)']
 
-    companyageInfo = st.select_slider('Age Category', companyage_categories)
+    # companyageInfo = st.select_slider('Age Category', companyage_categories)
+    companyageInfo = st.multiselect('Select Company Age (up to 3)', companyage_categories)
 
     submit = st.form_submit_button('Submit',args=(1,
                     [codeInfo, stateInfo, employeenumInfo, companyageInfo]))
 
 if submit:
     if len(codeInfo) > MAX_SELECTIONS:
+        st.error(f"Please select up to {MAX_SELECTIONS} industries only.")
+    if len(stateInfo) > MAX_SELECTIONS:
         st.error(f"Please select up to {MAX_SELECTIONS} states only.")
-    else:
-        # Sort the selected states
+    if len(employeenumInfo) > MAX_SELECTIONS:
+        st.error(f"Please select up to {MAX_SELECTIONS} company size categories only.")
+    if len(companyageInfo) > MAX_SELECTIONS:
+        st.error(f"Please select up to {MAX_SELECTIONS} company age categories only.")
+    if len(codeInfo) <= MAX_SELECTIONS and len(stateInfo) <= MAX_SELECTIONS and len(employeenumInfo) <= MAX_SELECTIONS and len(companyageInfo) <= MAX_SELECTIONS:
+        # Sort the selected states and cities
         selected_codes_sorted = sorted(codeInfo)
-        # Display the selected states in order
-        st.write("You selected (sorted):", selected_states_sorted)
+        selected_states_sorted = sorted(stateInfo)
+        selected_empnum_sorted = sorted(employeenumInfo)
+        selected_compage_sorted = sorted(companyageInfo)
+        
 # user preferences
 user_preferences = {
     'SOC_TITLE': ['COMPUTER SYSTEMS ANALYST', 'COMPUTER PROGRAMMER', 'ECONOMISTS'],
-    'WORKSITE_STATE': ['CA', 'TX', 'NY'],
-    'SECTOR_CODE': [54, 52, 33],
-    'EMPLOYEE_COUNT_CATEGORY': ['10000+', '501-1000', '51-200'],
-    'COMPANY_AGE_CATEGORY': ['Mature Stage (10-20 years)', 'Growth Stage (5-10 years)', 'Established Stage (20-50 years)'],
+    'WORKSITE_STATE': stateInfo,
+    'SECTOR_CODE': codeInfo,
+    'EMPLOYEE_COUNT_CATEGORY': employeenumInfo,
+    'COMPANY_AGE_CATEGORY': companyageInfo,
 } 
 
 # column weights
