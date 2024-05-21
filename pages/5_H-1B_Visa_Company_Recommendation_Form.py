@@ -127,9 +127,10 @@ with st.form(key='my_form'):
     # Display search results
     titleInfo = st.multiselect("Select SOC Titles", options=filtered_df["OCCUPATION"].tolist())
 
+    selected_titles = titleInfo
 
     # Store selected titles in a Python list
-    st.write("Selected SOC Titles:", titleInfo)
+    st.write("Selected SOC Titles:", selected_titles)
 
     # all codes
     codeOptions = ['11 - Agriculture, Forestry, Fishing and Hunting', 
