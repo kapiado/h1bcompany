@@ -242,7 +242,9 @@ with st.form(key='my_form'):
 
     # companyageInfo = st.select_slider('Age Category', companyage_categories)
     companyageInfo = st.multiselect('Select Company Age(s)', companyage_categories)
+    
     st.subheader("Weights of Importance")
+
     importance_level = st.slider(
         'Select the Importance Level',
         min_value=1,
