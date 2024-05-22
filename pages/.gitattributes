@@ -1,2 +1,1 @@
 merged_data_5_16_24.csv filter=lfs diff=lfs merge=lfs 
-*.csv filter=lfs diff=lfs merge=lfs 
