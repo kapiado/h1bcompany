@@ -347,7 +347,7 @@ with st.form(key='my_form'):
 #         selected_states_sorted = sorted(stateInfo)
 #         selected_empnum_sorted = sorted(employeenumInfo)
 #         selected_compage_sorted = sorted(companyageInfo)
-        
+st.write(titleInfo)
 # user preferences
 user_preferences = {
     'SOC_TITLE': titleInfo,
