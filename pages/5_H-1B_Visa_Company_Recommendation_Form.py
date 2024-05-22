@@ -257,7 +257,7 @@ with st.form(key='my_form'):
     "Please indicate your level of importance for each of the above inputs.\n"
     "*How important is each input in finding a job?*\n"
     f"***Please refer to this scale:***\n{importance_scale}"
-)
+    )
 
     # Display the text with a bulleted list
     body1.markdown(text)
