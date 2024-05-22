@@ -246,9 +246,37 @@ with st.form(key='my_form'):
     ### Ranking to apply weights to categories
     # Define the label for the slider
     st.subheader("Weights of Importance")
+        # Add a slider to the form
+    importance_level = st.slider(
+        'Select the Importance Level',
+        min_value=1,
+        max_value=5,
+        value=3,  # Default value
+        step=1,
+        format="%d"  # Format the slider to show as integer
+    )
+#     label = "Select importance level"
+
+# # Define the custom labels for the slider endpoints
+#     custom_labels = {1: "Not important at all", 5: "Most important"}
+
+#     # Create the select slider
+#     titleWeight = st.slider(
+#         label,
+#         min_value=1,
+#         max_value=5,
+#         value=(1, 5),  # Initial value
+#         step=1,
+#         format="%d",  # Format as integers
+#         format_func=lambda x: custom_labels.get(x)
+#     )
+
+#     # Display the selected importance level
+#     st.write("Selected importance level:", titleWeight)
+
 
     submit = st.form_submit_button('Submit',args=(1,
-                    [titleInfo,codeInfo, stateInfo, employeenumInfo, companyageInfo]))
+                    [titleInfo,codeInfo, stateInfo, employeenumInfo, companyageInfo,importance_level]))
 
 ## Code for MAX_SELECTIONS, selections constraint
 # if submit:
