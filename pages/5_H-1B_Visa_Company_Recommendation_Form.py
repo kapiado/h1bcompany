@@ -267,7 +267,7 @@ with st.form(key='my_form'):
 
 
     submit = st.form_submit_button('Submit',args=(1,
-                    [titleInfo,codeInfo, stateInfo, employeenumInfo, companyageInfo]))
+                    [titleInfo,codeInfo, stateInfo, employeenumInfo, companyageInfo,titleWeight]))
 
 ## Code for MAX_SELECTIONS, selections constraint
 # if submit:
