@@ -25,7 +25,7 @@ st.title('H-1B Visa Company Recommendation Form')
 st.write("This app recommends companies that are likely to sponsor an H-1B visa based on your user input. Use the form below to get started!")
          #uses *x* inputs to determine companies that would be a good fit for you to apply for. Use the form below to get started!")
 
-df_original = pd.read_csv("merged_data_5_16_24.csv")
+df_original = pd.read_csv("pages/merged_data_5_16_24.csv")
 
 # create copy of compete dataframe to be manipulated
 df_cleaned = df_original.copy()
