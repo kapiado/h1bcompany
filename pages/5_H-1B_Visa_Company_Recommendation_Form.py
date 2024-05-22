@@ -29,66 +29,66 @@ st.write("This app recommends companies that are likely to sponsor an H-1B visa 
 # st.write("Current working directory:", current_dir)
 df_original = pd.read_csv('/mount/src/h1bcompany/pages/merged_data_5_16_24.csv')
 
-# # create copy of compete dataframe to be manipulated
-# df_cleaned = df_original.copy()
-# df_cleaned.info()
+# create copy of compete dataframe to be manipulated
+df_cleaned = df_original.copy()
+df_cleaned.info()
 
-# # Select only the relevant columns
-# columns_list = [
-#     'EMPLOYER_NAME_CLEAN',
-#     'EMPLOYER_NAME',
-#     'SOC_TITLE',
-#     'WORKSITE_STATE',
-#     'PREVAILING_WAGE_ANNUAL',
-#     'SECTOR_CODE',
-#     'EMPLOYEE_COUNT_CATEGORY',
-#     'COMPANY_AGE',
-#     'COMPANY_LINK',
-#     'SPONSORED_2012.0',
-#     'SPONSORED_2013.0',
-#     'SPONSORED_2014.0',
-#     'SPONSORED_2015.0',
-#     'SPONSORED_2016.0',
-#     'SPONSORED_2017.0',
-#     'SPONSORED_2018.0',
-#     'SPONSORED_2019.0',
-#     'SPONSORED_2020.0',
-#     'SPONSORED_2021.0',
-#     'SPONSORED_2022.0',
-#     'SPONSORED_2023.0',
-#     'SPONSORED_2024.0'
-# ]
-# df_cleaned = df_cleaned.loc[:, columns_list]
+# Select only the relevant columns
+columns_list = [
+    'EMPLOYER_NAME_CLEAN',
+    'EMPLOYER_NAME',
+    'SOC_TITLE',
+    'WORKSITE_STATE',
+    'PREVAILING_WAGE_ANNUAL',
+    'SECTOR_CODE',
+    'EMPLOYEE_COUNT_CATEGORY',
+    'COMPANY_AGE',
+    'COMPANY_LINK',
+    'SPONSORED_2012.0',
+    'SPONSORED_2013.0',
+    'SPONSORED_2014.0',
+    'SPONSORED_2015.0',
+    'SPONSORED_2016.0',
+    'SPONSORED_2017.0',
+    'SPONSORED_2018.0',
+    'SPONSORED_2019.0',
+    'SPONSORED_2020.0',
+    'SPONSORED_2021.0',
+    'SPONSORED_2022.0',
+    'SPONSORED_2023.0',
+    'SPONSORED_2024.0'
+]
+df_cleaned = df_cleaned.loc[:, columns_list]
 
-# # sponsorship year weights
-# sponsorship_weights = {
-#     'SPONSORED_2012.0': 0.0294,
-#     'SPONSORED_2013.0': 0.0294,
-#     'SPONSORED_2014.0': 0.0294,
-#     'SPONSORED_2015.0': 0.0294,
-#     'SPONSORED_2016.0': 0.0588,
-#     'SPONSORED_2017.0': 0.0588,
-#     'SPONSORED_2018.0': 0.0588,
-#     'SPONSORED_2019.0': 0.0882,
-#     'SPONSORED_2020.0': 0.0882,
-#     'SPONSORED_2021.0': 0.0882,
-#     'SPONSORED_2022.0': 0.1471,
-#     'SPONSORED_2023.0': 0.1471,
-#     'SPONSORED_2024.0': 0.1471
-# }
+# sponsorship year weights
+sponsorship_weights = {
+    'SPONSORED_2012.0': 0.0294,
+    'SPONSORED_2013.0': 0.0294,
+    'SPONSORED_2014.0': 0.0294,
+    'SPONSORED_2015.0': 0.0294,
+    'SPONSORED_2016.0': 0.0588,
+    'SPONSORED_2017.0': 0.0588,
+    'SPONSORED_2018.0': 0.0588,
+    'SPONSORED_2019.0': 0.0882,
+    'SPONSORED_2020.0': 0.0882,
+    'SPONSORED_2021.0': 0.0882,
+    'SPONSORED_2022.0': 0.1471,
+    'SPONSORED_2023.0': 0.1471,
+    'SPONSORED_2024.0': 0.1471
+}
 
-# # combine the number of sponsored visas per year into one columns
-# df_cleaned['SPONSORED'] = 0.0
+# combine the number of sponsored visas per year into one columns
+df_cleaned['SPONSORED'] = 0.0
 
-# for col, weight in sponsorship_weights.items():
-#     df_cleaned['SPONSORED'] += df_cleaned[col] * weight
+for col, weight in sponsorship_weights.items():
+    df_cleaned['SPONSORED'] += df_cleaned[col] * weight
     
-# df_cleaned['SPONSORED'] = df_cleaned['SPONSORED'].round()
+df_cleaned['SPONSORED'] = df_cleaned['SPONSORED'].round()
 
-# # drop all the sponsored counts columns besides the combined value
-# columns_to_drop = list(sponsorship_weights.keys())
-# columns_to_drop.remove('SPONSORED_2023.0')
-# df_cleaned.drop(columns=columns_to_drop, inplace=True)
+# drop all the sponsored counts columns besides the combined value
+columns_to_drop = list(sponsorship_weights.keys())
+columns_to_drop.remove('SPONSORED_2023.0')
+df_cleaned.drop(columns=columns_to_drop, inplace=True)
 #df2.drop(['WAITING_TIMERANGE'], axis=1, inplace=True)
 
 
