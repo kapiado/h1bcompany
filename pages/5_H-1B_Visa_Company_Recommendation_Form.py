@@ -263,15 +263,13 @@ with st.form(key='my_form'):
     # Display the text with a bulleted list
     body1.markdown(text, unsafe_allow_html=True)
 
-    custom_labels = {1: "Not important at all", 5: "Most important"}
     titleWeight = st.slider(
         'How important is **your role** (SOC Title) when looking for a job?',
         min_value=1,
         max_value=5,
         value=3,  # Default value
         step=1,
-        format="%d",
-        format_func=lambda x: custom_labels.get(x)  # Format the slider to show as integer
+        format="%d"  # Format the slider to show as integer
     )
 
     codeWeight = st.slider(
@@ -280,38 +278,39 @@ with st.form(key='my_form'):
         max_value=5,
         value=3,  # Default value
         step=1,
-        format="%d",
-        format_func=lambda x: custom_labels.get(x)  # Format the slider to show as integer
+        format="%d"  # Format the slider to show as integer
     )
 
-    ### Ranking to apply weights to categories
-    # Define the label for the slider
-    
-        # Add a slider to the form
+    stateWeight = st.slider(
+        'How important is **the state you work in** when looking for a job?',
+        min_value=1,
+        max_value=5,
+        value=3,  # Default value
+        step=1,
+        format="%d"  # Format the slider to show as integer
+    )
 
-#     label = "Select importance level"
+    employeenumWeight = st.slider(
+        'How important is **the company size** (number of employees at the company) when looking for a job?',
+        min_value=1,
+        max_value=5,
+        value=3,  # Default value
+        step=1,
+        format="%d"  # Format the slider to show as integer
+    )
 
-# # Define the custom labels for the slider endpoints
-#     custom_labels = {1: "Not important at all", 5: "Most important"}
-
-#     # Create the select slider
-#     titleWeight = st.slider(
-#         label,
-#         min_value=1,
-#         max_value=5,
-#         value=(1, 5),  # Initial value
-#         step=1,
-#         format="%d",  # Format as integers
-#         format_func=lambda x: custom_labels.get(x)
-#     )
-
-#     # Display the selected importance level
-#     st.write("Selected importance level:", titleWeight)
-
+    companyageWeight = st.slider(
+        'How important is **the company age** (how long company has been active) when looking for a job?',
+        min_value=1,
+        max_value=5,
+        value=3,  # Default value
+        step=1,
+        format="%d"  # Format the slider to show as integer
+    )
 
     submit = st.form_submit_button('Submit',args=(1,
                     [titleInfo,codeInfo, stateInfo, employeenumInfo, companyageInfo,
-                     titleWeight,]))
+                     titleWeight,stateWeight,employeenumWeight,companyageWeight]))
 
 ## Code for MAX_SELECTIONS, selections constraint
 # if submit:
