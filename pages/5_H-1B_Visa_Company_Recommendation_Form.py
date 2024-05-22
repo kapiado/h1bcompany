@@ -114,7 +114,6 @@ df = pd.read_csv(url, dtype=str).fillna("")
 df["OCCUPATION"] = df["OCCUPATION"].str.strip()
 
 df = df.drop_duplicates(subset=["OCCUPATION"])
-st.write(df)
 
 # # Show the dataframe (we'll delete this later)
 # st.write(df)
@@ -122,6 +121,7 @@ st.write(df)
     # Some code
 with st.form(key='my_form'):
     st.subheader("Selections")
+    st.write(df)
     # Use a text_input to get the keywords to filter the dataframe
     text_search = st.text_input("Search for SOC Title", help = "Type here to retrieve results in dropdown menu below.")
     # Filter the DataFrame based on the search input
