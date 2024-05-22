@@ -309,9 +309,27 @@ with st.form(key='my_form'):
         format="%d"  # Format the slider to show as integer
     )
 
+    wageWeight = st.slider(
+        'How important is **the prevailing wage/salary** when looking for a job?',
+        min_value=1,
+        max_value=5,
+        value=3,  # Default value
+        step=1,
+        format="%d"  # Format the slider to show as integer
+    )
+
+    sponsoredyearWeight = st.slider(
+        'Lastly, this form includes data from 2013-2024. How important is **the sponsored year** (when the company submitted H-1B applications) when looking for a job?',
+        min_value=1,
+        max_value=5,
+        value=3,  # Default value
+        step=1,
+        format="%d"  # Format the slider to show as integer
+    )
     submit = st.form_submit_button('Submit',args=(1,
                     [titleInfo,codeInfo, stateInfo, employeenumInfo, companyageInfo,
-                     titleWeight,stateWeight,employeenumWeight,companyageWeight]))
+                     titleWeight,codeWeight,stateWeight,employeenumWeight,companyageWeight,
+                     wageWeight,sponsoredyearWeight]))
 
 ## Code for MAX_SELECTIONS, selections constraint
 # if submit:
@@ -339,48 +357,128 @@ user_preferences = {
     'COMPANY_AGE_CATEGORY': companyageInfo
 } 
 
+total_sum = titleWeight + codeWeight + stateWeight + employeenumWeight + companyageWeight + sponsoredyearWeight
 # column weights
 weights = {
-    'SPONSORED': .3,
-    'SOC_TITLE': .2,
-    'WORKSITE_STATE': .2,
-    'PREVAILING_WAGE_ANNUAL': .1,
-    'SECTOR_CODE': .1,
-    'EMPLOYEE_COUNT_CATEGORY': .05,
-    'COMPANY_AGE_CATEGORY': .05
+    'SPONSORED': sponsoredyearWeight / total_sum,
+    'SOC_TITLE': titleWeight / total_sum,
+    'WORKSITE_STATE': stateWeight / total_sum,
+    'PREVAILING_WAGE_ANNUAL': wageWeight / total_sum,
+    'SECTOR_CODE': codeWeight / total_sum,
+    'EMPLOYEE_COUNT_CATEGORY': employeenumWeight / total_sum,
+    'COMPANY_AGE_CATEGORY': companyageWeight / total_sum
 }
-# df3 = df2.copy()
-# df3.loc[len(df3)] = [codeInfo, wagelevelInfo, wageamountInfo, stateInfo, countryInfo, employeenumInfo,  admiclassInfo,  jobeducationInfo, expInfo, expmonthsInfo, layoffInfo, educationInfo]
-# # Create dummies for encode_df
-# cat_var = ['NAICS_CODE', 'PW_LEVEL','WORK_STATE','COUNTRY_OF_CITIZENSHIP','CLASS_OF_ADMISSION','JOB_EDUCATION','EXPERIENCE','LAYOFF_IN_PAST_SIX_MONTHS','WORKER_EDUCATION']
-# df3 = pd.get_dummies(df3, columns = cat_var)
-# # Extract encoded user data
-# user_encoded_df = df3.tail(1)
 
-# df4 = pd.DataFrame(columns = ['NAICS_CODE', 'PW_LEVEL', 'PW_AMOUNT', 'WORK_STATE',
-#          'COUNTRY_OF_CITIZENSHIP', 'EMPLOYER_NUM_EMPLOYEES',
-#         'CLASS_OF_ADMISSION', 'JOB_EDUCATION', 'EXPERIENCE',
-#          'EXPERIENCE_MONTHS', 'LAYOFF_IN_PAST_SIX_MONTHS', 'WORKER_EDUCATION'])
-# df4.loc[-1]=[codeInfo, wagelevelInfo, wageamountInfo, stateInfo, countryInfo, employeenumInfo,  admiclassInfo,  jobeducationInfo, expInfo, expmonthsInfo, layoffInfo, educationInfo]
+### Filter the dataset
 
-# st.subheader("Your Input")
-# df4
-# #df5 = pd.DataFrame(data = [codeInfo, wagelevelInfo, wageamountInfo, stateInfo, countryInfo, employeenumInfo,  admiclassInfo,  jobeducationInfo, expInfo, expmonthsInfo, layoffInfo, educationInfo])
-# #pd.concat([df4, df5])
-# st.subheader("Predicting Waiting Time")
+# create copy to be filtered
+df = df_cleaned.copy()
 
+# filter by the user preferences
+mask = pd.Series([True] * len(df), index=df.index)  # Initialize a mask of True values
+for column, values in user_preferences.items():
+    mask &= df[column].isin(values)
 
-#     # Using RF to predict() with encoded user data
-# new_prediction_rf = rf_model.predict(user_encoded_df)
-# new_prediction_prob_rf = rf_model.predict_proba(user_encoded_df).max()
-# # Show the predicted cost range on the app
-# st.write("Random Forest Prediction: {}".format(*new_prediction_rf))
-# st.write("Prediction Probability: {:.0%}".format(new_prediction_prob_rf))
+# Apply the combined mask to the DataFrame
+df1 = df[mask]
+df1 = df1.copy()
 
-# # Showing additional items
-# st.subheader("Prediction Performance")
-# st.image("pages/NewFeatureImportance.svg")
-# # tab1 = st.tabs(["Feature Importance"])
-# # with tab1:
-    
-# # ONLY INCLUDE FEATURE IMPORTANCE
+# Remove all columns that will not contribute to the rankings
+df1.drop(columns=['EMPLOYER_NAME', 'EMPLOYER_NAME_CLEAN', 'SPONSORED_2023.0', 'COMPANY_LINK'], inplace=True)
+
+# Apply preferences to the columns, put assigned values into new columns
+# as a safeguard against errors I had anything not included in the preferences be automatically set to 0
+for column, preferences in user_preferences.items():
+    preference_mapping = {name: len(preferences) - rank for rank, name in enumerate(preferences)}
+    df1[column] = df1[column].map(preference_mapping).fillna(0).astype(int)
+
+### Apply TOPSIS
+# calculate denominator value for normalization
+numeric_cols = df1.select_dtypes(include=[np.number])
+numeric_cols.fillna(0, inplace=True)
+
+col_1_squared = numeric_cols['SOC_TITLE'].apply(np.square)
+col_1_sum_squared = np.sqrt(col_1_squared.sum())
+
+col_2_squared = numeric_cols['WORKSITE_STATE'].apply(np.square)
+col_2_sum_squared = np.sqrt(col_2_squared.sum())
+
+col_3_squared = numeric_cols['PREVAILING_WAGE_ANNUAL'].apply(np.square)
+col_3_sum_squared = np.sqrt(col_3_squared.sum())
+
+col_4_squared = numeric_cols['SECTOR_CODE'].apply(np.square)
+col_4_sum_squared = np.sqrt(col_4_squared.sum())
+
+col_5_squared = numeric_cols['EMPLOYEE_COUNT_CATEGORY'].apply(np.square)
+col_5_sum_squared = np.sqrt(col_5_squared.sum())
+
+col_6_squared = numeric_cols['COMPANY_AGE_CATEGORY'].apply(np.square)
+col_6_sum_squared = np.sqrt(col_6_squared.sum())
+
+col_7_squared = numeric_cols['SPONSORED'].apply(np.square)
+col_7_sum_squared = np.sqrt(col_7_squared.sum())
+
+# normalize the columns
+df1['SOC_TITLE'] /= col_1_sum_squared
+df1['WORKSITE_STATE'] /= col_2_sum_squared
+df1['PREVAILING_WAGE_ANNUAL'] /= col_3_sum_squared
+df1['SECTOR_CODE'] /= col_4_sum_squared
+df1['EMPLOYEE_COUNT_CATEGORY'] /= col_5_sum_squared
+df1['COMPANY_AGE_CATEGORY'] /= col_6_sum_squared
+df1['SPONSORED'] /= col_7_sum_squared
+
+# apply the weights
+weights_df = pd.DataFrame.from_dict(weights, orient='index', columns=['weight']) #turning the weights into a df
+df1 = df1.multiply(weights_df['weight'], axis=1)
+
+# find positive and negative ideal solutions
+ideals = df1.agg(['max','min'])
+
+# calculate the separation measures for positive S
+pos_diff_sq = (df1 - ideals.iloc[0])**2
+df1['Si+'] = np.sqrt(pos_diff_sq.sum(axis=1))
+
+# calculate the separation measures for negative S
+neg_diff_sq = (df1 - ideals.iloc[1])**2
+df1['Si-'] = np.sqrt(neg_diff_sq.sum(axis=1))
+
+# calculate relative closeness
+df1['S_i'] = df1['Si-'] / (df1['Si+'] + df1['Si-'])
+
+# sort index by highest summed value
+sorted_indexes = df1.sort_values(by='S_i', ascending=False).index
+
+# Obtain the best companies for the user
+df = df.reindex(sorted_indexes)
+
+# add a column with the count of jobs by the company
+df['JOB_COUNT'] = df.groupby('EMPLOYER_NAME_CLEAN')['EMPLOYER_NAME_CLEAN'].transform('count')
+
+### Condense worksite state and SOC title
+
+# group by company to get all worksite states
+grouped_ws = df.groupby('EMPLOYER_NAME_CLEAN')['WORKSITE_STATE'].agg(list).reset_index()
+grouped_ws['OTHER_WORKSITE_STATE'] = grouped_ws.apply(lambda row: 
+                                                list(set(row['WORKSITE_STATE']) - set([row['WORKSITE_STATE'][0]])), 
+                                                axis=1)
+result = pd.merge(df, grouped_ws, on='EMPLOYER_NAME_CLEAN', how='left')
+
+# fix formating 
+result.rename(columns={'WORKSITE_STATE_x': 'WORKSITE_STATE'}, inplace=True)
+result.drop(columns=['WORKSITE_STATE_y'], inplace=True)
+
+# group by company to get all SOC titles
+grouped_soc = result.groupby('EMPLOYER_NAME_CLEAN')['SOC_TITLE'].agg(list).reset_index()
+grouped_soc['OTHER_SOC_TITLES'] = grouped_soc.apply(lambda row: 
+                                                    list(set(row['SOC_TITLE']) - set([row['SOC_TITLE'][0]])), 
+                                                    axis=1)
+result = pd.merge(result, grouped_soc, on='EMPLOYER_NAME_CLEAN', how='left')
+
+# fix formating 
+result.rename(columns={'SOC_TITLE_x': 'SOC_TITLE'}, inplace=True)
+result.drop(columns=['SOC_TITLE_y'], inplace=True)
+
+# only display unique outputs
+result.drop_duplicates(subset=['EMPLOYER_NAME_CLEAN'], keep='first', inplace=True)
+result.drop(columns = 'SPONSORED', inplace = True)
+st.write(result)
