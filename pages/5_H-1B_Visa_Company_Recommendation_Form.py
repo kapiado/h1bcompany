@@ -27,6 +27,7 @@ st.write("This app recommends companies that are likely to sponsor an H-1B visa 
 # import os
 # current_dir = os.getcwd()
 # st.write("Current working directory:", current_dir)
+#df_original = pd.read_csv('/mount/src/h1bcompany/pages/merged_data_5_16_24.csv')
 df_original = pd.read_csv('/mount/src/h1bcompany/pages/merged_data_5_16_24.csv')
 
 # create copy of compete dataframe to be manipulated
