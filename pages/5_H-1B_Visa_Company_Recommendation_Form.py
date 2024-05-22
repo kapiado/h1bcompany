@@ -242,7 +242,7 @@ with st.form(key='my_form'):
 
     # companyageInfo = st.select_slider('Age Category', companyage_categories)
     companyageInfo = st.multiselect('Select Company Age(s)', companyage_categories)
-
+    st.subheader("Weights of Importance")
     importance_level = st.slider(
         'Select the Importance Level',
         min_value=1,
@@ -254,7 +254,7 @@ with st.form(key='my_form'):
 
     ### Ranking to apply weights to categories
     # Define the label for the slider
-    st.subheader("Weights of Importance")
+    
         # Add a slider to the form
 
 #     label = "Select importance level"
