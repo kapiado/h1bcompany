@@ -350,11 +350,11 @@ with st.form(key='my_form'):
 st.write(titleInfo)
 # user preferences
 user_preferences = {
-    'SOC_TITLE': titleInfo,
-    'WORKSITE_STATE': stateInfo,
-    'SECTOR_CODE': codeInfo,
-    'EMPLOYEE_COUNT_CATEGORY': employeenumInfo,
-    'COMPANY_AGE_CATEGORY': companyageInfo
+    'SOC_TITLE': list(titleInfo.values()),
+    'WORKSITE_STATE': list(stateInfo.values()),
+    'SECTOR_CODE': list(codeInfo.values()),
+    'EMPLOYEE_COUNT_CATEGORY': list(employeenumInfo()),
+    'COMPANY_AGE_CATEGORY': list(companyageInfo())
 } 
 
 total_sum = titleWeight + codeWeight + stateWeight + employeenumWeight + companyageWeight + sponsoredyearWeight
