@@ -242,11 +242,27 @@ with st.form(key='my_form'):
 
     # companyageInfo = st.select_slider('Age Category', companyage_categories)
     companyageInfo = st.multiselect('Select Company Age(s)', companyage_categories)
-    
-    st.subheader("Weights of Importance")
 
-    importance_level = st.slider(
-        'Select the Importance Level',
+    st.subheader("Weights of Importance")
+    body1 = st.empty()
+
+    # Define the list of inputs
+    inputs_list = ["Title", "Code", "State", "Employee Number", "Company Age"]
+
+    # Define the importance scale
+    importance_scale = "1 = Not important at all\n2 = Less important\n3 = Neutral\n4 = Important\n5 = Most important"
+
+    # Define the text to display
+    text = (
+    "Please indicate your level of importance for each of the above inputs.\n"
+    "*How important is each input in finding a job?*\n"
+    f"***Please refer to this scale:***\n{importance_scale}"
+)
+
+    # Display the text with a bulleted list
+    body1.markdown(text)
+    titleWeight = st.slider(
+        'How',
         min_value=1,
         max_value=5,
         value=3,  # Default value
@@ -280,7 +296,8 @@ with st.form(key='my_form'):
 
 
     submit = st.form_submit_button('Submit',args=(1,
-                    [titleInfo,codeInfo, stateInfo, employeenumInfo, companyageInfo,importance_level]))
+                    [titleInfo,codeInfo, stateInfo, employeenumInfo, companyageInfo,
+                     titleWeight,]))
 
 ## Code for MAX_SELECTIONS, selections constraint
 # if submit:
