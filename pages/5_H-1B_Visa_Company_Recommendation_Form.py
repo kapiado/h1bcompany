@@ -353,8 +353,8 @@ user_preferences = {
     'SOC_TITLE': list(titleInfo.values()),
     'WORKSITE_STATE': list(stateInfo.values()),
     'SECTOR_CODE': list(codeInfo.values()),
-    'EMPLOYEE_COUNT_CATEGORY': list(employeenumInfo()),
-    'COMPANY_AGE_CATEGORY': list(companyageInfo())
+    'EMPLOYEE_COUNT_CATEGORY': list(employeenumInfo.values()),
+    'COMPANY_AGE_CATEGORY': list(companyageInfo.values())
 } 
 
 total_sum = titleWeight + codeWeight + stateWeight + employeenumWeight + companyageWeight + sponsoredyearWeight
