@@ -3,6 +3,7 @@
 import pandas as pd             # Pandas
 import streamlit as st          # Streamlit
 import numpy as np              # NumPy
+import ast
 # import matplotlib.pyplot as plt # Matplotlib
 # import seaborn as sns           # Seaborn
 
@@ -347,7 +348,16 @@ with st.form(key='my_form'):
 #         selected_states_sorted = sorted(stateInfo)
 #         selected_empnum_sorted = sorted(employeenumInfo)
 #         selected_compage_sorted = sorted(companyageInfo)
-st.write(titleInfo)
+
+titleInfo_data = titleInfo
+# Convert the string into a dictionary
+data = ast.literal_eval("{" + titleInfo_data[1:-1] + "}")
+
+# Now you can access the string part using the index as the key
+job_title = data[0]  # Accesses the job title at index 0
+st.write(job_title) 
+
+
 # user preferences
 user_preferences = {
     'SOC_TITLE': titleInfo,
