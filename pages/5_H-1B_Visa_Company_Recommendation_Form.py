@@ -250,17 +250,19 @@ with st.form(key='my_form'):
     inputs_list = ["Title", "Code", "State", "Employee Number", "Company Age"]
 
     # Define the importance scale
-    importance_scale = "1 = Not important at all\n2 = Less important\n3 = Neutral\n4 = Important\n5 = Most important"
+    importance_scale = "1 = Not important at all<br>2 = Less important<br>3 = Neutral<br>4 = Important<br>5 = Most important"
 
     # Define the text to display
-    text = (
-    "Please indicate your level of importance for each of the above inputs. <br> "
-    "*How important is each input in finding a job?* <br> "
-    f"***Please refer to this scale:*** <br>  {importance_scale}"
-    )
+    text = f"""
+    Please indicate your level of importance for each of the above inputs.<br>
+    <b>How important is each input in finding a job?</b><br>
+    <i>Please refer to this scale:</i><br>
+    {importance_scale}
+    """
 
     # Display the text with a bulleted list
-    body1.markdown(text)
+    body1.markdown(text, unsafe_allow_html=True)
+
     titleWeight = st.slider(
         'How',
         min_value=1,
