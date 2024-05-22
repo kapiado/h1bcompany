@@ -244,7 +244,7 @@ with st.form(key='my_form'):
     ### Ranking to apply weights to categories
     # Define the label for the slider
     st.subheader("Weights of Importance")
-#     label = "Select importance level"
+    label = "Select importance level"
 
 # Define the custom labels for the slider endpoints
     custom_labels = {1: "Not important at all", 5: "Most important"}
