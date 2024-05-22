@@ -481,4 +481,4 @@ result.drop(columns=['SOC_TITLE_y'], inplace=True)
 # only display unique outputs
 result.drop_duplicates(subset=['EMPLOYER_NAME_CLEAN'], keep='first', inplace=True)
 result.drop(columns = 'SPONSORED', inplace = True)
-st.write(df)
+st.write(result)
