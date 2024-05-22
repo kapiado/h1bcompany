@@ -243,10 +243,6 @@ with st.form(key='my_form'):
     # companyageInfo = st.select_slider('Age Category', companyage_categories)
     companyageInfo = st.multiselect('Select Company Age(s)', companyage_categories)
 
-    ### Ranking to apply weights to categories
-    # Define the label for the slider
-    st.subheader("Weights of Importance")
-        # Add a slider to the form
     importance_level = st.slider(
         'Select the Importance Level',
         min_value=1,
@@ -255,6 +251,12 @@ with st.form(key='my_form'):
         step=1,
         format="%d"  # Format the slider to show as integer
     )
+
+    ### Ranking to apply weights to categories
+    # Define the label for the slider
+    st.subheader("Weights of Importance")
+        # Add a slider to the form
+
 #     label = "Select importance level"
 
 # # Define the custom labels for the slider endpoints
@@ -276,7 +278,7 @@ with st.form(key='my_form'):
 
 
     submit = st.form_submit_button('Submit',args=(1,
-                    (titleInfo,codeInfo, stateInfo, employeenumInfo, companyageInfo,importance_level)))
+                    [titleInfo,codeInfo, stateInfo, employeenumInfo, companyageInfo,importance_level]))
 
 ## Code for MAX_SELECTIONS, selections constraint
 # if submit:
