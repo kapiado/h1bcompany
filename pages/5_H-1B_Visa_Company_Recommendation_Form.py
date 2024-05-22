@@ -263,13 +263,25 @@ with st.form(key='my_form'):
     # Display the text with a bulleted list
     body1.markdown(text, unsafe_allow_html=True)
 
+    custom_labels = {1: "Not important at all", 5: "Most important"}
     titleWeight = st.slider(
-        'How',
+        'How important is **your role** (SOC Title) when looking for a job?',
         min_value=1,
         max_value=5,
         value=3,  # Default value
         step=1,
-        format="%d"  # Format the slider to show as integer
+        format="%d",
+        format_func=lambda x: custom_labels.get(x)  # Format the slider to show as integer
+    )
+
+    codeWeight = st.slider(
+        'How important is **the industry** when looking for a job?',
+        min_value=1,
+        max_value=5,
+        value=3,  # Default value
+        step=1,
+        format="%d",
+        format_func=lambda x: custom_labels.get(x)  # Format the slider to show as integer
     )
 
     ### Ranking to apply weights to categories
