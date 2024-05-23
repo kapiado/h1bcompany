@@ -507,7 +507,6 @@
 # result.drop_duplicates(subset=['EMPLOYER_NAME_CLEAN'], keep='first', inplace=True)
 # result.drop(columns = 'SPONSORED', inplace = True)
 # st.write(result)
-
 # Import libraries
 import pandas as pd
 import streamlit as st
@@ -636,6 +635,10 @@ if submit_button:
         return df
     
     filtered_df = apply_filters(df_cleaned)
+
+    # Check and debug filtered results
+    st.write("Filtered DataFrame:")
+    st.write(filtered_df)
 
     # Calculate weights and perform TOPSIS
     def topsis(df, weights):
