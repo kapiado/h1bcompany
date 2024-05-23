@@ -670,33 +670,40 @@ with st.form(key='my_form'):
             total_weight = sum(weights.values())
             normalized_weights = {k: v / total_weight for k, v in weights.items()}
 
-            result_df = topsis(filtered_df, normalized_weights)
+            # Check alignment between weights and numeric columns
+            numeric_cols = filtered_df.select_dtypes(include=[np.number]).columns
+            valid_weights = {k: v for k, v in normalized_weights.items() if k in numeric_cols}
 
-            # Add job count column
-            result_df['JOB_COUNT'] = result_df.groupby('EMPLOYER_NAME_CLEAN')['EMPLOYER_NAME_CLEAN'].transform('count')
+            if len(valid_weights) != len(numeric_cols):
+                st.error("The weights dictionary keys do not align with the numeric columns in the DataFrame.")
+            else:
+                result_df = topsis(filtered_df, valid_weights)
 
-            # Condense worksite state and SOC title
-            grouped_ws = result_df.groupby('EMPLOYER_NAME_CLEAN')['WORKSITE_STATE'].agg(list).reset_index()
-            grouped_ws['OTHER_WORKSITE_STATE'] = grouped_ws['WORKSITE_STATE'].apply(lambda x: x[1:] if len(x) > 1 else [])
-            result_df = result_df.merge(grouped_ws, on='EMPLOYER_NAME_CLEAN', how='left')
-            result_df.rename(columns={'WORKSITE_STATE_x': 'WORKSITE_STATE'}, inplace=True)
-            result_df.drop(columns=['WORKSITE_STATE_y'], inplace=True)
+                # Add job count column
+                result_df['JOB_COUNT'] = result_df.groupby('EMPLOYER_NAME_CLEAN')['EMPLOYER_NAME_CLEAN'].transform('count')
 
-            grouped_soc = result_df.groupby('EMPLOYER_NAME_CLEAN')['SOC_TITLE'].agg(list).reset_index()
-            grouped_soc['OTHER_SOC_TITLES'] = grouped_soc['SOC_TITLE'].apply(lambda x: x[1:] if len(x) > 1 else [])
-            result_df = result_df.merge(grouped_soc, on='EMPLOYER_NAME_CLEAN', how='left')
-            result_df.rename(columns={'SOC_TITLE_x': 'SOC_TITLE'}, inplace=True)
-            result_df.drop(columns=['SOC_TITLE_y'], inplace=True)
+                # Condense worksite state and SOC title
+                grouped_ws = result_df.groupby('EMPLOYER_NAME_CLEAN')['WORKSITE_STATE'].agg(list).reset_index()
+                grouped_ws['OTHER_WORKSITE_STATE'] = grouped_ws['WORKSITE_STATE'].apply(lambda x: x[1:] if len(x) > 1 else [])
+                result_df = result_df.merge(grouped_ws, on='EMPLOYER_NAME_CLEAN', how='left')
+                result_df.rename(columns={'WORKSITE_STATE_x': 'WORKSITE_STATE'}, inplace=True)
+                result_df.drop(columns=['WORKSITE_STATE_y'], inplace=True)
 
-            # Display only unique outputs
-            result_df.drop_duplicates(subset=['EMPLOYER_NAME_CLEAN'], keep='first', inplace=True)
-            result_df = result_df[['EMPLOYER_NAME', 'SOC_TITLE', 'WORKSITE_STATE', 'PREVAILING_WAGE_ANNUAL', 
-                                'EMPLOYEE_COUNT_CATEGORY', 'COMPANY_AGE_CATEGORY', 'COMPANY_LINK', 'SPONSORED', 
-                                'JOB_COUNT', 'OTHER_WORKSITE_STATE', 'OTHER_SOC_TITLES']]
+                grouped_soc = result_df.groupby('EMPLOYER_NAME_CLEAN')['SOC_TITLE'].agg(list).reset_index()
+                grouped_soc['OTHER_SOC_TITLES'] = grouped_soc['SOC_TITLE'].apply(lambda x: x[1:] if len(x) > 1 else [])
+                result_df = result_df.merge(grouped_soc, on='EMPLOYER_NAME_CLEAN', how='left')
+                result_df.rename(columns={'SOC_TITLE_x': 'SOC_TITLE'}, inplace=True)
+                result_df.drop(columns=['SOC_TITLE_y'], inplace=True)
 
-            # Display top recommendations
-            st.write("#### Top 10 Recommendations")
-            st.write(result_df.head(10))
+                # Display only unique outputs
+                result_df.drop_duplicates(subset=['EMPLOYER_NAME_CLEAN'], keep='first', inplace=True)
+                result_df = result_df[['EMPLOYER_NAME', 'SOC_TITLE', 'WORKSITE_STATE', 'PREVAILING_WAGE_ANNUAL', 
+                                    'EMPLOYEE_COUNT_CATEGORY', 'COMPANY_AGE_CATEGORY', 'COMPANY_LINK', 'SPONSORED', 
+                                    'JOB_COUNT', 'OTHER_WORKSITE_STATE', 'OTHER_SOC_TITLES']]
+
+                # Display top recommendations
+                st.write("#### Top 10 Recommendations")
+                st.write(result_df.head(10))
 
         # # Filter the dataframe based on user input
         # def apply_filters(df):
