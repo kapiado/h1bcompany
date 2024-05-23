@@ -354,8 +354,9 @@ with st.form(key='my_form'):
 # for title in titleInfo:
 #     st.write(title)
 
-titles_list = [title for title in titleInfo]
-st.write(titles_list)
+titles_output = []
+for title in titleInfo:
+    titles_output.append(title)
 # Now you can access the string part using the index as the key
 #st.write(titleInfo[0]) 
 
