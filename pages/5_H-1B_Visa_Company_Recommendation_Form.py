@@ -91,6 +91,7 @@ df_cleaned['SPONSORED'] = df_cleaned['SPONSORED'].round()
 columns_to_drop = list(sponsorship_weights.keys())
 columns_to_drop.remove('SPONSORED_2023.0')
 df_cleaned.drop(columns=columns_to_drop, inplace=True)
+st.write(df_cleaned)
 #df2.drop(['WAITING_TIMERANGE'], axis=1, inplace=True)
 
 
