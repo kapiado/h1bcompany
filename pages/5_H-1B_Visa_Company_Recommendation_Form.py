@@ -353,8 +353,7 @@ with st.form(key='my_form'):
 
 data = [value for value in titleInfo]
 # Now you can access the string part using the index as the key
-job_title = data[0]  # Accesses the job title at index 0
-st.write(job_title) 
+st.write(data) 
 
 
 # user preferences
