@@ -764,8 +764,8 @@ for column, values in user_preferences.items():
 # Apply the combined mask to the DataFrame
 df_filtered = df_filtered[mask].copy()
 
-# Remove columns not contributing to rankings
-df_filtered.drop(columns=['EMPLOYER_NAME', 'EMPLOYER_NAME_CLEAN', 'SPONSORED_2023.0', 'COMPANY_LINK'], inplace=True)
+# # Remove columns not contributing to rankings
+# df_filtered.drop(columns=['EMPLOYER_NAME', 'EMPLOYER_NAME_CLEAN', 'SPONSORED_2023.0', 'COMPANY_LINK'], inplace=True)
 
 # Map preferences to columns and assign values to new columns
 for column, preferences in user_preferences.items():
