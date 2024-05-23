@@ -349,10 +349,9 @@ with st.form(key='my_form'):
 #         selected_empnum_sorted = sorted(employeenumInfo)
 #         selected_compage_sorted = sorted(companyageInfo)
 
-titleInfo_data = titleInfo
 # Convert the string into a dictionary
-data = ast.literal_eval("{" + titleInfo_data[1:-1] + "}")
 
+data = [value for value in titleInfo]
 # Now you can access the string part using the index as the key
 job_title = data[0]  # Accesses the job title at index 0
 st.write(job_title) 
