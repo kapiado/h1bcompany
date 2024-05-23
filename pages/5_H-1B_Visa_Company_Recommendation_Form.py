@@ -327,10 +327,10 @@ with st.form(key='my_form'):
         step=1,
         format="%d"  # Format the slider to show as integer
     )
-    submit = st.form_submit_button('Submit',args=(1,
-                    [titleInfo,codeInfo, stateInfo, employeenumInfo, companyageInfo,
-                     titleWeight,codeWeight,stateWeight,employeenumWeight,companyageWeight,
-                     wageWeight,sponsoredyearWeight]))
+    # submit = st.form_submit_button('Submit',args=(1,
+    #                 [titleInfo,codeInfo, stateInfo, employeenumInfo, companyageInfo,
+    #                  titleWeight,codeWeight,stateWeight,employeenumWeight,companyageWeight,
+    #                  wageWeight,sponsoredyearWeight]))
 
 # ## Code for MAX_SELECTIONS, selections constraint
 # # if submit:
