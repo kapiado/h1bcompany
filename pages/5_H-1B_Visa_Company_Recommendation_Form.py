@@ -649,7 +649,7 @@ with st.form(key='my_form'):
         else:
             def topsis(df, weights):
                 df = df.copy()
-                numeric_cols = df.select_dtypes(include=[np.number]).columns
+                numeric_cols = df.select_dtypes(include=[np.number]).columns.intersection(weights.keys())
                 
                 # Normalize numeric columns
                 for col in numeric_cols:
@@ -670,12 +670,12 @@ with st.form(key='my_form'):
             total_weight = sum(weights.values())
             normalized_weights = {k: v / total_weight for k, v in weights.items()}
 
-            # Check alignment between weights and numeric columns
+            # Check and align weights with numeric columns
             numeric_cols = filtered_df.select_dtypes(include=[np.number]).columns
             valid_weights = {k: v for k, v in normalized_weights.items() if k in numeric_cols}
 
-            if len(valid_weights) != len(numeric_cols):
-                st.error("The weights dictionary keys do not align with the numeric columns in the DataFrame.")
+            if len(valid_weights) == 0:
+                st.error("No valid numeric columns found for TOPSIS calculation.")
             else:
                 result_df = topsis(filtered_df, valid_weights)
 
