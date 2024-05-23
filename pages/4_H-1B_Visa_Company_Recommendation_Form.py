@@ -696,12 +696,14 @@ if submit_button:
 
             # Condense worksite state and SOC title
             grouped_ws = result_df.groupby('EMPLOYER_NAME_CLEAN')['WORKSITE_STATE'].agg(list).reset_index()
+            grouped_ws['WORKSITE_STATE'] = grouped_ws['WORKSITE_STATE'].apply(lambda x: list(set(x)))  # Remove duplicates
             grouped_ws['OTHER_WORKSITE_STATE'] = grouped_ws['WORKSITE_STATE'].apply(lambda x: x[1:] if len(x) > 1 else [])
             result_df = result_df.merge(grouped_ws, on='EMPLOYER_NAME_CLEAN', how='left')
             result_df.rename(columns={'WORKSITE_STATE_x': 'WORKSITE_STATE'}, inplace=True)
             result_df.drop(columns=['WORKSITE_STATE_y'], inplace=True)
 
             grouped_soc = result_df.groupby('EMPLOYER_NAME_CLEAN')['SOC_TITLE'].agg(list).reset_index()
+            grouped_soc['SOC_TITLE'] = grouped_soc['SOC_TITLE'].apply(lambda x: list(set(x)))  # Remove duplicates
             grouped_soc['OTHER_SOC_TITLES'] = grouped_soc['SOC_TITLE'].apply(lambda x: x[1:] if len(x) > 1 else [])
             result_df = result_df.merge(grouped_soc, on='EMPLOYER_NAME_CLEAN', how='left')
             result_df.rename(columns={'SOC_TITLE_x': 'SOC_TITLE'}, inplace=True)
