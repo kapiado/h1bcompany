@@ -717,8 +717,8 @@ with st.form(key='my_form'):
         result_df = result_df[['EMPLOYER_NAME', 'SOC_TITLE', 'WORKSITE_STATE', 'PREVAILING_WAGE_ANNUAL', 
                                'EMPLOYEE_COUNT_CATEGORY', 'COMPANY_AGE_CATEGORY', 'COMPANY_LINK', 'SPONSORED']]
         
-        # st.write("### Top Recommended Companies")
-        # st.write(result_df)
+        st.write("### Top Recommended Companies")
+        st.write(result_df)
 
     #     st.write("#### Top 10 Recommendations")
     #     st.write(result_df.head(10))
