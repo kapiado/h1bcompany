@@ -562,8 +562,20 @@ df_cleaned.drop(columns=columns_to_drop, inplace=True)
 sheet_id = "1oLjpm4KLNj-tUN_Pnbrk_ihU7bNylJwG"
 sheet_name = "Final"
 url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sheet={sheet_name}"
-soc_titles_df = pd.read_csv(url, dtype=str).fillna("").drop_duplicates(subset=["OCCUPATION"])
-#soc_titles_df["OCCUPATION"] = soc_titles_df["OCCUPATION"].str.strip()
+
+# Read the CSV file into a DataFrame
+soc_titles_df = pd.read_csv(url, dtype=str)
+
+# Fill NaN values with empty strings
+soc_titles_df = soc_titles_df.fillna("")
+
+# Remove leading and trailing whitespace from the OCCUPATION column
+soc_titles_df["OCCUPATION"] = soc_titles_df["OCCUPATION"].str.strip()
+
+# Drop duplicate rows based on the OCCUPATION column
+soc_titles_df = soc_titles_df.drop_duplicates(subset=["OCCUPATION"])
+# soc_titles_df = pd.read_csv(url, dtype=str).fillna("").drop_duplicates(subset=["OCCUPATION"])
+# soc_titles_df["OCCUPATION"] = soc_titles_df["OCCUPATION"].str.strip()
 
 # Create the form
 with st.form(key='my_form'):
