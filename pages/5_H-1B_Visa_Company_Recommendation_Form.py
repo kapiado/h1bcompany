@@ -666,11 +666,12 @@ if submit_button:
         result_df = result_df[['EMPLOYER_NAME', 'SOC_TITLE', 'WORKSITE_STATE', 'PREVAILING_WAGE_ANNUAL', 
                                'EMPLOYEE_COUNT_CATEGORY', 'COMPANY_AGE_CATEGORY', 'COMPANY_LINK', 'SPONSORED']]
         
-        st.write("### Recommended Companies")
-        st.write(result_df)
+        # st.write("### Top 10 Recommended Companies")
+        # st.write(result_df)
 
         st.write("#### Top 10 Recommendations")
-        st.dataframe(result_df.head(10))
+        st.write(result_df.head(10))
+        # st.dataframe(result_df.head(10))
         
         st.write("#### Download the Results")
         csv = result_df.to_csv(index=False).encode('utf-8')
