@@ -618,79 +618,57 @@ with st.form(key='my_form'):
 
     submit_button = st.form_submit_button(label='Submit')
 
-if submit_button:
-    def apply_filters(df):
-        filters = {
-            'SOC_TITLE': titleInfo,
-            'SECTOR_CODE': codeInfo,
-            'WORKSITE_STATE': stateInfo,
-            'EMPLOYEE_COUNT_CATEGORY': employeenumInfo,
-            'COMPANY_AGE_CATEGORY': companyageInfo
+    if submit_button:
+        # Filter the dataframe based on user input
+        def apply_filters(df):
+            filters = {
+                'SOC_TITLE': titleInfo,
+                'SECTOR_CODE': codeInfo,
+                'WORKSITE_STATE': stateInfo,
+                'EMPLOYEE_COUNT_CATEGORY': employeenumInfo,
+                'COMPANY_AGE_CATEGORY': companyageInfo
+            }
+
+            for col, values in filters.items():
+                if values:
+                    df = df[df[col].isin(values)]
+
+            return df
+
+        filtered_df = apply_filters(df_cleaned)
+
+        # Check and debug filtered results
+        st.write("Filtered DataFrame:")
+        st.write(filtered_df)
+
+        def topsis(df, weights):
+            df = df.copy()
+            df['z_score'] = np.sqrt((df - df.min()) / (df.max() - df.min()))
+            weighted_score = df.multiply(weights, axis=1)
+            df['topsis_score'] = weighted_score.sum(axis=1)
+            return df.sort_values(by='topsis_score', ascending=False)
+
+        weights = {
+            'SOC_TITLE': titleWeight,
+            'SECTOR_CODE': codeWeight,
+            'WORKSITE_STATE': stateWeight,
+            'EMPLOYEE_COUNT_CATEGORY': employeenumWeight,
+            'COMPANY_AGE_CATEGORY': companyageWeight,
+            'SPONSORED': 5  # Sponsor weight is fixed
         }
-        
-        for col, values in filters.items():
-            if values:
-                df = df[df[col].isin(values)]
-        
-        return df
-    
-    filtered_df = apply_filters(df_cleaned)
 
-    # Check and debug filtered results
-    st.write("Filtered DataFrame:")
-    st.write(filtered_df)
-
-    # Calculate weights and perform TOPSIS
-    def topsis(df, weights):
-        # Ensure the DataFrame only contains numeric columns
-        numeric_df = df.select_dtypes(include=[np.number])
-        
-        # Check if the numeric_df is empty
-        if numeric_df.empty:
-            raise ValueError("No numeric columns available for TOPSIS calculation.")
-        
-        # Normalize weights
-        normalized_weights = {k: v / sum(weights.values()) for k, v in weights.items()}
-        
-        # Make sure the weights dictionary keys match the numeric_df columns
-        weights_for_numeric_df = {col: normalized_weights[col] for col in numeric_df.columns if col in normalized_weights}
-
-        # Calculate the z-scores
-        df_copy = numeric_df.copy()
-        df_copy = (numeric_df - numeric_df.min()) / (numeric_df.max() - numeric_df.min())
-        
-        # Calculate the weighted score
-        weighted_score = df_copy.multiply(weights_for_numeric_df, axis=1)
-        
-        # Calculate the TOPSIS score
-        df_copy['topsis_score'] = weighted_score.sum(axis=1)
-        
-        # Add non-numeric columns back to the result for final output
-        result_df = df.copy()
-        result_df['topsis_score'] = df_copy['topsis_score']
-        
-        return result_df.sort_values(by='topsis_score', ascending=False)
-
-    weights = {
-        'SOC_TITLE': titleWeight,
-        'SECTOR_CODE': codeWeight,
-        'WORKSITE_STATE': stateWeight,
-        'EMPLOYEE_COUNT_CATEGORY': employeenumWeight,
-        'COMPANY_AGE_CATEGORY': companyageWeight,
-        'SPONSORED': 5  # Sponsor weight is fixed
-    }
-
-    if filtered_df.empty:
-        st.warning("No companies found matching your criteria. Please adjust your filters and try again.")
-    else:
-        normalized_weights = {k: v / sum(weights.values()) for k, v in weights.items()}
-        result_df = topsis(filtered_df, normalized_weights)
-        
-        result_df = result_df[['EMPLOYER_NAME', 'SOC_TITLE', 'WORKSITE_STATE', 'PREVAILING_WAGE_ANNUAL', 
-                               'EMPLOYEE_COUNT_CATEGORY', 'COMPANY_AGE_CATEGORY', 'COMPANY_LINK', 'SPONSORED', 'topsis_score']]
-        
-        st.write("#### Top 10 Recommendations")
-        st.write(result_df.head(10))
+        if filtered_df.empty:
+            st.warning("No companies found matching your criteria. Please adjust your filters and try again.")
+        else:
+            normalized_weights = {k: v / sum(weights.values()) for k, v in weights.items()}
+            result_df = topsis(filtered_df, normalized_weights)
+            
+            result_df = result_df[['EMPLOYER_NAME', 'SOC_TITLE', 'WORKSITE_STATE', 'PREVAILING_WAGE_ANNUAL', 
+                                'EMPLOYEE_COUNT_CATEGORY', 'COMPANY_AGE_CATEGORY', 'COMPANY_LINK', 'SPONSORED']]
+            
+            # Display top recommendations
+            st.write("#### Top 10 Recommendations")
+            st.write(result_df.head(10))
     # # Filter the dataframe based on user input
     # def apply_filters(df):
     #     filters = {
