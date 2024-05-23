@@ -645,8 +645,8 @@ with st.form(key='my_form'):
         filtered_df = apply_filters(df_cleaned)
 
         # Check and debug filtered results
-        st.write("Filtered DataFrame:")
-        st.write(filtered_df)
+        # st.write("Filtered DataFrame:")
+        # st.write(filtered_df)
 
         def topsis(df, weights):
             df = df.copy()
