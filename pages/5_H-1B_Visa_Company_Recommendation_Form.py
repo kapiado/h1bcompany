@@ -350,10 +350,10 @@ with st.form(key='my_form'):
 #         selected_compage_sorted = sorted(companyageInfo)
 
 # Convert the string into a dictionary
-
-data = [value for value in titleInfo]
+strings_only = [item.split(":")[1].strip().strip('"') for item in titleInfo]
+st.write(strings_only)
 # Now you can access the string part using the index as the key
-st.write(data) 
+#st.write(titleInfo[0]) 
 
 
 # user preferences
