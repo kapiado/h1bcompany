@@ -351,7 +351,8 @@ with st.form(key='my_form'):
 
 # Convert the string into a dictionary
 
-st.write(titleInfo[0:])
+for title in titleInfo:
+    st.write(title)
 # Now you can access the string part using the index as the key
 #st.write(titleInfo[0]) 
 
