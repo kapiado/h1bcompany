@@ -671,9 +671,9 @@ if submit_button:
         # st.write(result_df)
 
         st.write("#### Top 10 Recommendations")
-        st.dataframe(result_df.head(10))
+        st.write(result_df.head(10))
         # st.dataframe(result_df.head(10))
         
-        st.write("#### Download the Results")
-        csv = result_df.to_csv(index=False).encode('utf-8')
-        st.download_button(label="Download CSV", data=csv, file_name='recommended_companies.csv', mime='text/csv')
+        # st.write("#### Download the Results")
+        # csv = result_df.to_csv(index=False).encode('utf-8')
+        # st.download_button(label="Download CSV", data=csv, file_name='recommended_companies.csv', mime='text/csv')
