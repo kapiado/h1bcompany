@@ -520,8 +520,8 @@ st.title('H-1B Visa Company Recommendation Form')
 st.write("This app recommends companies that are likely to sponsor an H-1B visa based on your user input. Use the form below to get started!")
 
 # Load data
-df_original = pd.read_csv('/mount/src/h1bcompany/pages/merged_data_5_16_24.csv')
-
+# df_original = pd.read_csv('/mount/src/h1bcompany/pages/merged_data_5_16_24.csv')
+df_original = pd.read_csv('merged_data_5_16_24.csv')
 # Create a copy of the data
 df_cleaned = df_original.copy()
 
