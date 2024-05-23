@@ -717,5 +717,6 @@ if submit_button:
 
             # Display top recommendations
             st.write("#### Top 10 Recommendations")
-            st.write(result_df.head(10))
+            #st.write(result_df.head(10))
+            st.dataframe(result_df.head(10),hide_index=True)
             # don't display
