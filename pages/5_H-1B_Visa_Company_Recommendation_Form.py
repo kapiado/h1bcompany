@@ -473,14 +473,14 @@ with st.form(key='my_form'):
 
         # group by company to get all worksite states
         grouped_ws = df.groupby('EMPLOYER_NAME_CLEAN')['WORKSITE_STATE'].agg(list).reset_index()
-        # grouped_ws['OTHER_WORKSITE_STATE'] = grouped_ws.apply(lambda row: 
-        #                                                 list(set(row['WORKSITE_STATE']) - set([row['WORKSITE_STATE'][0]])), 
-        #                                                 axis=1)
-        grouped_ws['OTHER_WORKSITE_STATE'] = ''
-        for index, row in grouped_ws.iterrows():
-            row_values = row['WORKSITE_STATE']
-            row_values.remove(row_values[0])  # Remove the first value
-            grouped_ws.at[index, 'OTHER_WORKSITE_STATE'] = row_values
+        grouped_ws['OTHER_WORKSITE_STATE'] = grouped_ws.apply(lambda row: 
+                                                        list(set(row['WORKSITE_STATE']) - set([row['WORKSITE_STATE'][0]])), 
+                                                        axis=1)
+        # grouped_ws['OTHER_WORKSITE_STATE'] = ''
+        # for index, row in grouped_ws.iterrows():
+        #     row_values = row['WORKSITE_STATE']
+        #     row_values.remove(row_values[0])  # Remove the first value
+        #     grouped_ws.at[index, 'OTHER_WORKSITE_STATE'] = row_values
         result = pd.merge(df, grouped_ws, on='EMPLOYER_NAME_CLEAN', how='left')
 
         # fix formating 
@@ -492,13 +492,13 @@ with st.form(key='my_form'):
 
         # group by company to get all SOC titles
         grouped_soc = result.groupby('EMPLOYER_NAME_CLEAN')['SOC_TITLE'].agg(list).reset_index()
-        # grouped_soc['OTHER_SOC_TITLES'] = grouped_soc.apply(lambda row: 
-        #                                                     list(set(row['SOC_TITLE']) - set([row['SOC_TITLE'][0]])), 
-        #                                                     axis=1)
-        for index, row in grouped_soc.iterrows():
-            row_values = row['SOC_TITLE']
-            row_values.remove(row_values[0])  # Remove the first value
-            grouped_soc.at[index, 'OTHER_SOC_TITLES'] = row_values
+        grouped_soc['OTHER_SOC_TITLES'] = grouped_soc.apply(lambda row: 
+                                                            list(set(row['SOC_TITLE']) - set([row['SOC_TITLE'][0]])), 
+                                                            axis=1)
+        # for index, row in grouped_soc.iterrows():
+        #     row_values = row['SOC_TITLE']
+        #     row_values.remove(row_values[0])  # Remove the first value
+        #     grouped_soc.at[index, 'OTHER_SOC_TITLES'] = row_values
         result = pd.merge(result, grouped_soc, on='EMPLOYER_NAME_CLEAN', how='left')
 
         # fix formating 
