@@ -563,9 +563,10 @@ soc_titles_df["OCCUPATION"] = soc_titles_df["OCCUPATION"].str.strip()
 with st.form(key='my_form'):
     st.subheader("Selections")
 
-    text_search = st.text_input("Search for SOC Title", help="Type here to retrieve results in dropdown menu below.")
-    filtered_df = soc_titles_df[soc_titles_df["OCCUPATION"].str.contains(text_search, case=False, na=False)]
-    titleInfo = st.multiselect("Select SOC Title(s)", options=filtered_df["OCCUPATION"].tolist())
+    # text_search = st.text_input("Search for SOC Title", help="Type here to retrieve results in dropdown menu below.")
+    # filtered_df = soc_titles_df[soc_titles_df["OCCUPATION"].str.contains(text_search, case=False, na=False)]
+    # titleInfo = st.multiselect("Select SOC Title(s)", options=soc_titles_df["OCCUPATION"].tolist())
+    titleInfo = st.multiselect("Select SOC Title(s)", options=soc_titles_df["OCCUPATION"].tolist())
 
     # Industry codes
     codeOptions = ['11 - Agriculture, Forestry, Fishing and Hunting', '22 - Utilities', 
