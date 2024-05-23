@@ -689,7 +689,7 @@ with st.form(key='my_form'):
 
     # Check and debug filtered results
     st.write("Filtered DataFrame:")
-    st.write(filtered_df)
+    st.write(filtered_df.head(10))
 
     # Calculate weights and perform TOPSIS
     def topsis(df, weights):
@@ -718,7 +718,7 @@ with st.form(key='my_form'):
                                'EMPLOYEE_COUNT_CATEGORY', 'COMPANY_AGE_CATEGORY', 'COMPANY_LINK', 'SPONSORED']]
         
         st.write("### Top Recommended Companies")
-        st.write(result_df)
+        st.write(result_df.head(10))
 
     #     st.write("#### Top 10 Recommendations")
     #     st.write(result_df.head(10))
