@@ -466,49 +466,53 @@ with st.form(key='my_form'):
         # Obtain the best companies for the user
         df = df.reindex(sorted_indexes)
 
-        # add a column with the count of jobs by the company
-        df['JOB_COUNT'] = df.groupby('EMPLOYER_NAME_CLEAN')['EMPLOYER_NAME_CLEAN'].transform('count')
+        # # add a column with the count of jobs by the company
+        # df['JOB_COUNT'] = df.groupby('EMPLOYER_NAME_CLEAN')['EMPLOYER_NAME_CLEAN'].transform('count')
 
-        ### Condense worksite state and SOC title
+        # ### Condense worksite state and SOC title
 
-        # group by company to get all worksite states
-        grouped_ws = df.groupby('EMPLOYER_NAME_CLEAN')['WORKSITE_STATE'].agg(list).reset_index()
-        grouped_ws['OTHER_WORKSITE_STATE'] = grouped_ws.apply(lambda row: 
-                                                        list(set(row['WORKSITE_STATE']) - set([row['WORKSITE_STATE'][0]])), 
-                                                        axis=1)
-        # grouped_ws['OTHER_WORKSITE_STATE'] = ''
+        # # group by company to get all worksite states
+        # grouped_ws = df.groupby('EMPLOYER_NAME_CLEAN')['WORKSITE_STATE'].agg(list).reset_index()
+        # # grouped_ws['OTHER_WORKSITE_STATE'] = grouped_ws.apply(lambda row: 
+        # #                                                 list(set(row['WORKSITE_STATE']) - set([row['WORKSITE_STATE'][0]])), 
+        # #                                                 axis=1)
+        # # grouped_ws['OTHER_WORKSITE_STATE'] = ''
         # for index, row in grouped_ws.iterrows():
         #     row_values = row['WORKSITE_STATE']
         #     row_values.remove(row_values[0])  # Remove the first value
         #     grouped_ws.at[index, 'OTHER_WORKSITE_STATE'] = row_values
-        result = pd.merge(df, grouped_ws, on='EMPLOYER_NAME_CLEAN', how='left')
+        # result = pd.merge(df, grouped_ws, on='EMPLOYER_NAME_CLEAN', how='left')
 
-        # fix formating 
-        result.rename(columns={'WORKSITE_STATE_x': 'WORKSITE_STATE'}, inplace=True)
-        result.drop(columns=['WORKSITE_STATE_y'], inplace=True)
-
-
+        # # fix formating 
+        # result.rename(columns={'WORKSITE_STATE_x': 'WORKSITE_STATE'}, inplace=True)
+        # result.drop(columns=['WORKSITE_STATE_y'], inplace=True)
 
 
-        # group by company to get all SOC titles
-        grouped_soc = result.groupby('EMPLOYER_NAME_CLEAN')['SOC_TITLE'].agg(list).reset_index()
-        grouped_soc['OTHER_SOC_TITLES'] = grouped_soc.apply(lambda row: 
-                                                            list(set(row['SOC_TITLE']) - set([row['SOC_TITLE'][0]])), 
-                                                            axis=1)
-        # for index, row in grouped_soc.iterrows():
-        #     row_values = row['SOC_TITLE']
-        #     row_values.remove(row_values[0])  # Remove the first value
-        #     grouped_soc.at[index, 'OTHER_SOC_TITLES'] = row_values
-        result = pd.merge(result, grouped_soc, on='EMPLOYER_NAME_CLEAN', how='left')
 
-        # fix formating 
-        result.rename(columns={'SOC_TITLE_x': 'SOC_TITLE'}, inplace=True)
-        result.drop(columns=['SOC_TITLE_y'], inplace=True)
+
+        # # group by company to get all SOC titles
+        # grouped_soc = result.groupby('EMPLOYER_NAME_CLEAN')['SOC_TITLE'].agg(list).reset_index()
+        # grouped_soc['OTHER_SOC_TITLES'] = grouped_soc.apply(lambda row: 
+        #                                                     list(set(row['SOC_TITLE']) - set([row['SOC_TITLE'][0]])), 
+        #                                                     axis=1)
+        # # for index, row in grouped_soc.iterrows():
+        # #     row_values = row['SOC_TITLE']
+        # #     row_values.remove(row_values[0])  # Remove the first value
+        # #     grouped_soc.at[index, 'OTHER_SOC_TITLES'] = row_values
+        # result = pd.merge(result, grouped_soc, on='EMPLOYER_NAME_CLEAN', how='left')
+
+        # # fix formating 
+        # result.rename(columns={'SOC_TITLE_x': 'SOC_TITLE'}, inplace=True)
+        # result.drop(columns=['SOC_TITLE_y'], inplace=True)
+
+        df.drop_duplicates(subset=['EMPLOYER_NAME_CLEAN'], keep='first', inplace=True)
+        df.drop(columns = 'SPONSORED', inplace = True)
+        st.write(df.head(10))
 
         # only display unique outputs
-        result.drop_duplicates(subset=['EMPLOYER_NAME_CLEAN'], keep='first', inplace=True)
-        result.drop(columns = 'SPONSORED', inplace = True)
-        st.write(result.head(10))
+        # result.drop_duplicates(subset=['EMPLOYER_NAME_CLEAN'], keep='first', inplace=True)
+        # result.drop(columns = 'SPONSORED', inplace = True)
+        # st.write(result.head(10))
 # Import libraries
 # import pandas as pd
 # import streamlit as st
