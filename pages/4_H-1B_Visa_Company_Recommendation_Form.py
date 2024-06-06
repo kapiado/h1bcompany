@@ -533,7 +533,7 @@ df_cleaned = df_original.copy()
 # Select relevant columns
 columns_list = [
     'EMPLOYER_NAME_CLEAN', 'EMPLOYER_NAME', 'SOC_TITLE', 'WORKSITE_STATE', 'PREVAILING_WAGE_ANNUAL', 
-    'SECTOR_CODE', 'SUBSECTOR_CODE', 'EMPLOYEE_COUNT_CATEGORY', 'COMPANY_AGE_CATEGORY', 'COMPANY_LINK', 'SPONSORED_2012.0', 
+    'SECTOR_CODE', 'SUBSECTOR_CODE', 'SUBSECTOR_NAME', 'EMPLOYEE_COUNT_CATEGORY', 'COMPANY_AGE_CATEGORY', 'COMPANY_LINK', 'SPONSORED_2012.0', 
     'SPONSORED_2013.0', 'SPONSORED_2014.0', 'SPONSORED_2015.0', 'SPONSORED_2016.0', 'SPONSORED_2017.0', 
     'SPONSORED_2018.0', 'SPONSORED_2019.0', 'SPONSORED_2020.0', 'SPONSORED_2021.0', 'SPONSORED_2022.0', 
     'SPONSORED_2023.0', 'SPONSORED_2024.0'
@@ -577,10 +577,6 @@ soc_titles_df = soc_titles_df.drop_duplicates(subset=["OCCUPATION"])
 # soc_titles_df = pd.read_csv(url, dtype=str).fillna("").drop_duplicates(subset=["OCCUPATION"])
 # soc_titles_df["OCCUPATION"] = soc_titles_df["OCCUPATION"].str.strip()
 
-# Initialize session state for subsector options
-if 'subsector_options' not in st.session_state:
-    st.session_state.subsector_options = []
-
 # Create the form
 with st.form(key='my_form'):
     st.subheader("Selections")
@@ -609,14 +605,30 @@ with st.form(key='my_form'):
     # Extract selected sector codes
     selected_sector_codes = [int(code.split(' ')[0]) for code in codeInfo]
     
-    # Generate subsector code options based on selected sector codes
-    if selected_sector_codes:
-        st.session_state.subsector_options = df_cleaned[df_cleaned['SECTOR_CODE'].isin(selected_sector_codes)]['SUBSECTOR_CODE'].unique().tolist()
-    else:
+    if 'subsector_options' not in st.session_state:
         st.session_state.subsector_options = []
 
-    subsectorInfo = st.multiselect('Select Subsector Code(s)', st.session_state.subsector_options, help="Select the appropriate Subsector Code based on your selected Sector Code(s).")
+    if selected_sector_codes:
+        # Filter the DataFrame based on selected sector codes
+        filtered_df = df_cleaned[df_cleaned['SECTOR_CODE'].isin(selected_sector_codes)]
+        
+        # Sort the filtered DataFrame by subsector code
+        sorted_df = filtered_df.sort_values(by='SUBSECTOR_CODE')
+        
+        # Create a new column combining subsector code and name
+        sorted_df['SUBSECTOR_CODE_NAME'] = sorted_df['SUBSECTOR_CODE'].astype(str) + ' - ' + sorted_df['SUBSECTOR_NAME']
+        
+        # Get unique subsector code names as a list
+        subsector_options = sorted_df['SUBSECTOR_CODE_NAME'].unique().tolist()
 
+        # Update session state with new subsector options
+        st.session_state.subsector_options = subsector_options
+    else:
+        # Clear subsector options in session state
+        st.session_state.subsector_options = []
+
+    # Use session state for subsector options in multiselect widget
+    subsectorInfo = st.multiselect('Select Subsector Code(s)', st.session_state.subsector_options, help="Select the appropriate Subsector Code based on your selected Sector Code(s).")
 
     state_abbreviations = ["AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DC", "DE", "DISTRICT OF COLUMBIA", "FL", "FM", 
                            "GA", "GU", "GUAM", "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "MD", "ME", "MH", 
