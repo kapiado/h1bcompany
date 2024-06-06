@@ -566,11 +566,8 @@ url = f"https://docs.google.com/spreadsheets/d/{sheet_id}/gviz/tq?tqx=out:csv&sh
 # Read the CSV file into a DataFrame
 soc_titles_df = pd.read_csv(url, dtype=str)
 
-# Fill NaN values with empty strings
-soc_titles_df = soc_titles_df.fillna("")
-
-# Remove leading and trailing whitespace from the OCCUPATION column
-soc_titles_df["OCCUPATION"] = soc_titles_df["OCCUPATION"].str.strip()
+# Fill NaN values with empty strings and remove leading/trailing whitespace
+soc_titles_df["OCCUPATION"] = soc_titles_df["OCCUPATION"].fillna("").str.strip().upper()
 
 # Drop duplicate rows based on the OCCUPATION column
 soc_titles_df = soc_titles_df.drop_duplicates(subset=["OCCUPATION"])
