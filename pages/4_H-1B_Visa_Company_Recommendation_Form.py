@@ -640,7 +640,8 @@ with st.form(key='my_form'):
 
     # Use session state for subsector options in multiselect widget
     subsectorInfo = st.multiselect('Select Subsector Code(s)', st.session_state.subsector_options, help="Select the appropriate Subsector Code based on your selected Sector Code(s).")
-
+    
+    st.experimental_rerun()
 
     state_abbreviations = ["AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DC", "DE", "DISTRICT OF COLUMBIA", "FL", "FM", 
                            "GA", "GU", "GUAM", "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "MD", "ME", "MH", 
