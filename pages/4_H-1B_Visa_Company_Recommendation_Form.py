@@ -611,7 +611,9 @@ with st.form(key='my_form'):
     
     # Generate subsector code options based on selected sector codes
     if selected_sector_codes:
-        st.session_state.subsector_options = df_cleaned[df_cleaned['SECTOR_CODE'].isin(selected_sector_codes)]['SUBSECTOR_CODE'].unique().tolist()
+        subsector_options = df_cleaned[df_cleaned['SECTOR_CODE'].isin(selected_sector_codes)]['SUBSECTOR_CODE'].unique().tolist()
+        st.session_state.subsector_options = subsector_options
+        st.experimental_rerun()
     else:
         st.session_state.subsector_options = []
 
