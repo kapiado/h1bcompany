@@ -686,7 +686,7 @@ if submit_button:
 # Filter the dataframe based on user input
     def apply_filters(df):
         filters = {
-            'SOC_TITLE': titleInfo,
+            'SOC_TITLE': list(map(str.upper, titleInfo)),
             'SECTOR_CODE': selected_sector_codes,
             'WORKSITE_STATE': stateInfo,
             'EMPLOYEE_COUNT_CATEGORY': employeenumInfo,
