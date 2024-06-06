@@ -607,7 +607,7 @@ with st.form(key='my_form'):
     codeInfo = st.multiselect('Select industry/industries', codeOptions, help="Select the most appropriate Industry Code as found here https://www.census.gov/naics/?58967?yearbck=2022")
 
     # Extract selected sector codes
-    selected_sector_codes = [code.split(' ')[0] for code in codeInfo]
+    selected_sector_codes = [int(code.split(' ')[0]) for code in codeInfo]
     
     # Generate subsector code options based on selected sector codes
     if selected_sector_codes:
