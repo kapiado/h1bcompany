@@ -736,3 +736,7 @@ if submit_button:
             #st.write(result_df.head(10))
             st.dataframe(result_df.head(10),hide_index=True)
             # don't display
+# Check for changes in codeInfo and update subsector options accordingly
+if st.session_state.get('prev_codeInfo') != codeInfo:
+    st.session_state.prev_codeInfo = codeInfo
+    st.experimental_rerun()
