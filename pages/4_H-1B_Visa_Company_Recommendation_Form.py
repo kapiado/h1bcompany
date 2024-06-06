@@ -602,6 +602,18 @@ with st.form(key='my_form'):
     
     codeInfo = st.multiselect('Select industry/industries', codeOptions, help="Select the most appropriate Industry Code as found here https://www.census.gov/naics/?58967?yearbck=2022")
 
+    # Extract selected sector codes
+    selected_sector_codes = [code.split(' ')[0] for code in codeInfo]
+    
+    # Generate subsector code options based on selected sector codes
+    if selected_sector_codes:
+        st.session_state.subsector_options = df_cleaned[df_cleaned['SECTOR_CODE'].isin(selected_sector_codes)]['SUBSECTOR_CODE'].unique().tolist()
+    else:
+        st.session_state.subsector_options = []
+
+    subsectorInfo = st.multiselect('Select Subsector Code(s)', st.session_state.subsector_options, help="Select the appropriate Subsector Code based on your selected Sector Code(s).")
+
+
     state_abbreviations = ["AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DC", "DE", "DISTRICT OF COLUMBIA", "FL", "FM", 
                            "GA", "GU", "GUAM", "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "MD", "ME", "MH", 
                            "MI", "MN", "MO", "MP", "MS", "MT", "NC", "ND", "NE", "NH", "NJ", "NM", "NV", "NY", "OH", 
