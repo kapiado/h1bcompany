@@ -605,33 +605,42 @@ with st.form(key='my_form'):
     # Extract selected sector codes
     selected_sector_codes = [int(code.split(' ')[0]) for code in codeInfo]
     st.session_state.selected_sector_codes = selected_sector_codes
-    
+
+    # Initialize subsector options
     if 'subsector_options' not in st.session_state:
         st.session_state.subsector_options = []
 
-    if selected_sector_codes:
-        # Filter the DataFrame based on selected sector codes
-        filtered_df = df_cleaned[df_cleaned['SECTOR_CODE'].isin(st.session_state.selected_sector_codes)]
-        
-        # Sort the filtered DataFrame by subsector code
-        sorted_df = filtered_df.sort_values(by='SUBSECTOR_CODE')
-        
-        # Create a new column combining subsector code and name
-        sorted_df['SUBSECTOR_CODE_NAME'] = sorted_df['SUBSECTOR_CODE'].astype(str) + ' - ' + sorted_df['SUBSECTOR_NAME']
-        
-        # Get unique subsector code names as a list
-        subsector_options = sorted_df['SUBSECTOR_CODE_NAME'].unique().tolist()
+    # Define a function to update subsector options
+    def update_subsector_options():
+        if st.session_state.synced():  # Check if session state has synced
+            if selected_sector_codes:
+                # Filter the DataFrame based on selected sector codes
+                filtered_df = df_cleaned[df_cleaned['SECTOR_CODE'].isin(selected_sector_codes)]
+                
+                # Sort the filtered DataFrame by subsector code
+                sorted_df = filtered_df.sort_values(by='SUBSECTOR_CODE')
+                
+                # Create a new column combining subsector code and name
+                sorted_df['SUBSECTOR_CODE_NAME'] = sorted_df['SUBSECTOR_CODE'].astype(str) + ' - ' + sorted_df['SUBSECTOR_NAME']
+                
+                # Get unique subsector code names as a list
+                subsector_options = sorted_df['SUBSECTOR_CODE_NAME'].unique().tolist()
 
-        # Update session state with new subsector options
-        st.session_state.subsector_options = subsector_options
-    else:
-        # Clear subsector options in session state
-        st.session_state.subsector_options = []
+                # Update session state with new subsector options
+                st.session_state.subsector_options = subsector_options
+            else:
+                # Clear subsector options in session state
+                st.session_state.subsector_options = []
+
+    # Observe changes to the selected_sector_codes
+    st.session_state.sync()
+
+    # Update subsector options
+    update_subsector_options()
 
     # Use session state for subsector options in multiselect widget
     subsectorInfo = st.multiselect('Select Subsector Code(s)', st.session_state.subsector_options, help="Select the appropriate Subsector Code based on your selected Sector Code(s).")
 
-    st.experimental_rerun()
 
     state_abbreviations = ["AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DC", "DE", "DISTRICT OF COLUMBIA", "FL", "FM", 
                            "GA", "GU", "GUAM", "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "MD", "ME", "MH", 
