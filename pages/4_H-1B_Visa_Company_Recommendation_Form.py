@@ -604,6 +604,7 @@ with st.form(key='my_form'):
 
     # Extract selected sector codes
     selected_sector_codes = [int(code.split(' ')[0]) for code in codeInfo]
+    st.session_state.selected_sector_codes = selected_sector_codes
     
     if 'subsector_options' not in st.session_state:
         st.session_state.subsector_options = []
