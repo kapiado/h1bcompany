@@ -630,6 +630,8 @@ with st.form(key='my_form'):
     # Use session state for subsector options in multiselect widget
     subsectorInfo = st.multiselect('Select Subsector Code(s)', st.session_state.subsector_options, help="Select the appropriate Subsector Code based on your selected Sector Code(s).")
 
+    st.experimental_rerun()
+
     state_abbreviations = ["AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DC", "DE", "DISTRICT OF COLUMBIA", "FL", "FM", 
                            "GA", "GU", "GUAM", "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "MD", "ME", "MH", 
                            "MI", "MN", "MO", "MP", "MS", "MT", "NC", "ND", "NE", "NH", "NJ", "NM", "NV", "NY", "OH", 
@@ -662,7 +664,7 @@ with st.form(key='my_form'):
     employeenumWeight = st.slider('How important is **company size** when looking for a job?', 1, 5, 3)
     companyageWeight = st.slider('How important is **company age** when looking for a job?', 1, 5, 3)
     
-    st.experimental_rerun()
+    
 
     submit_button = st.form_submit_button(label='Submit')
 
@@ -750,7 +752,3 @@ if submit_button:
             #st.write(result_df.head(10))
             st.dataframe(result_df.head(10),hide_index=True)
             # don't display
-# Check for changes in codeInfo and update subsector options accordingly
-if st.session_state.get('prev_codeInfo') != codeInfo:
-    st.session_state.prev_codeInfo = codeInfo
-    st.experimental_rerun()
