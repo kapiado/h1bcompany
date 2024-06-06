@@ -611,7 +611,7 @@ with st.form(key='my_form'):
 
     if selected_sector_codes:
         # Filter the DataFrame based on selected sector codes
-        filtered_df = df_cleaned[df_cleaned['SECTOR_CODE'].isin(selected_sector_codes)]
+        filtered_df = df_cleaned[df_cleaned['SECTOR_CODE'].isin(st.session_state.selected_sector_codes)]
         
         # Sort the filtered DataFrame by subsector code
         sorted_df = filtered_df.sort_values(by='SUBSECTOR_CODE')
