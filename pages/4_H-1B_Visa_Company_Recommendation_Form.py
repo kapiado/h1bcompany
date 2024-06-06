@@ -662,6 +662,8 @@ with st.form(key='my_form'):
     employeenumWeight = st.slider('How important is **company size** when looking for a job?', 1, 5, 3)
     companyageWeight = st.slider('How important is **company age** when looking for a job?', 1, 5, 3)
     
+    st.experimental_rerun()
+
     submit_button = st.form_submit_button(label='Submit')
 
 
