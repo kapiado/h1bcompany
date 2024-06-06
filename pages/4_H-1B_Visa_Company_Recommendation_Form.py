@@ -577,6 +577,10 @@ soc_titles_df = soc_titles_df.drop_duplicates(subset=["OCCUPATION"])
 # soc_titles_df = pd.read_csv(url, dtype=str).fillna("").drop_duplicates(subset=["OCCUPATION"])
 # soc_titles_df["OCCUPATION"] = soc_titles_df["OCCUPATION"].str.strip()
 
+# Initialize session state for subsector options
+if 'subsector_options' not in st.session_state:
+    st.session_state.subsector_options = []
+
 # Create the form
 with st.form(key='my_form'):
     st.subheader("Selections")
