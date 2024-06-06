@@ -611,10 +611,17 @@ with st.form(key='my_form'):
         st.session_state.subsector_options = []
 
     # Define a function to update subsector options
-    def update_subsector_options():
+    def update_subsector_options(selected_sector_codes):
         if selected_sector_codes:
+            print("Selected sector codes:", selected_sector_codes)  # Debugging statement
+            
             # Filter the DataFrame based on selected sector codes
             filtered_df = df_cleaned[df_cleaned['SECTOR_CODE'].isin(selected_sector_codes)]
+            
+            # Check if any rows are filtered
+            if filtered_df.empty:
+                print("No rows found for selected sector codes.")  # Debugging statement
+                return
             
             # Sort the filtered DataFrame by subsector code
             sorted_df = filtered_df.sort_values(by='SUBSECTOR_CODE')
@@ -627,16 +634,17 @@ with st.form(key='my_form'):
 
             # Update session state with new subsector options
             st.session_state.subsector_options = subsector_options
+            print("Updated subsector options:", st.session_state.subsector_options)  # Debugging statement
         else:
             # Clear subsector options in session state
             st.session_state.subsector_options = []
-
-    # Update subsector options
-    update_subsector_options()
+            print("No selected sector codes. Cleared subsector options.")  # Debugging statement
 
     # Use session state for subsector options in multiselect widget
     subsectorInfo = st.multiselect('Select Subsector Code(s)', st.session_state.subsector_options, help="Select the appropriate Subsector Code based on your selected Sector Code(s).")
 
+    # Call the function to update subsector options
+    update_subsector_options(st.session_state.selected_sector_codes)
     state_abbreviations = ["AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DC", "DE", "DISTRICT OF COLUMBIA", "FL", "FM", 
                            "GA", "GU", "GUAM", "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "MD", "ME", "MH", 
                            "MI", "MN", "MO", "MP", "MS", "MT", "NC", "ND", "NE", "NH", "NJ", "NM", "NV", "NY", "OH", 
