@@ -746,8 +746,8 @@ if submit_button:
             grouped_ws['WORKSITE_STATE'] = grouped_ws['FULL_WORKSITE_STATE'].apply(lambda x: list(set(x)))  # Remove duplicates
             grouped_ws['OTHER_WORKSITE_STATE'] = grouped_ws['FULL_WORKSITE_STATE'].apply(lambda x: x[1:] if len(x) > 1 else [])
             result_df = result_df.merge(grouped_ws, on='EMPLOYER_NAME_CLEAN', how='left')
-            result_df.rename(columns={'WORKSITE_STATE_x': 'WORKSITE_STATE'}, inplace=True)
-            result_df.drop(columns=['WORKSITE_STATE_y'], inplace=True)
+            result_df.rename(columns={'FULL_WORKSITE_STATE_x': 'WORKSITE_STATE'}, inplace=True)
+            result_df.drop(columns=['FULL_WORKSITE_STATE_y'], inplace=True)
 
             grouped_soc = result_df.groupby('EMPLOYER_NAME_CLEAN')['SOC_TITLE'].agg(list).reset_index()
             grouped_soc['SOC_TITLE'] = grouped_soc['SOC_TITLE'].apply(lambda x: list(set(x)))  # Remove duplicates
