@@ -525,14 +525,14 @@ st.title('H-1B Visa Company Recommendation Form')
 st.write("This app recommends companies that are likely to sponsor an H-1B visa based on your user input. Use the form below to get started!")
 
 # Load data
-df_original = pd.read_csv('/mount/src/h1bcompany/pages/merged_data_6_5_24.csv')
+df_original = pd.read_csv('/mount/src/h1bcompany/pages/merged_data_6_12_24.csv')
 
 # Create a copy of the data
 df_cleaned = df_original.copy()
 
 # Select relevant columns
 columns_list = [
-    'EMPLOYER_NAME_CLEAN', 'EMPLOYER_NAME', 'SOC_TITLE', 'WORKSITE_STATE', 'PREVAILING_WAGE_ANNUAL', 
+    'EMPLOYER_NAME_CLEAN', 'EMPLOYER_NAME', 'SOC_TITLE', 'FULL_WORKSITE_STATE', 'PREVAILING_WAGE_ANNUAL', 
     'SECTOR_CODE', 'SUBSECTOR_CODE', 'SUBSECTOR_NAME', 'EMPLOYEE_COUNT_CATEGORY', 'COMPANY_AGE_CATEGORY', 'COMPANY_LINK', 'SPONSORED_2012.0', 
     'SPONSORED_2013.0', 'SPONSORED_2014.0', 'SPONSORED_2015.0', 'SPONSORED_2016.0', 'SPONSORED_2017.0', 
     'SPONSORED_2018.0', 'SPONSORED_2019.0', 'SPONSORED_2020.0', 'SPONSORED_2021.0', 'SPONSORED_2022.0', 
@@ -645,13 +645,15 @@ with st.form(key='my_form'):
 
     # Call the function to update subsector options
     update_subsector_options(st.session_state.selected_sector_codes)
-    state_abbreviations = ["AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DC", "DE", "DISTRICT OF COLUMBIA", "FL", "FM", 
-                           "GA", "GU", "GUAM", "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "MD", "ME", "MH", 
-                           "MI", "MN", "MO", "MP", "MS", "MT", "NC", "ND", "NE", "NH", "NJ", "NM", "NV", "NY", "OH", 
-                           "OK", "OR", "PA", "PR", "PUERTO RICO", "PW", "RI", "SC", "SD", "TN", "TX", "UT", "VA", 
-                           "VI", "VIRGIN ISLANDS", "VT", "WA", "WI", "WV", "WY"]
+    # state_abbreviations = ["AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DC", "DE", "DISTRICT OF COLUMBIA", "FL", "FM", 
+    #                        "GA", "GU", "GUAM", "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "MD", "ME", "MH", 
+    #                        "MI", "MN", "MO", "MP", "MS", "MT", "NC", "ND", "NE", "NH", "NJ", "NM", "NV", "NY", "OH", 
+    #                        "OK", "OR", "PA", "PR", "PUERTO RICO", "PW", "RI", "SC", "SD", "TN", "TX", "UT", "VA", 
+    #                        "VI", "VIRGIN ISLANDS", "VT", "WA", "WI", "WV", "WY"]
 
-    stateInfo = st.multiselect('Select U.S. Work State(s)', state_abbreviations, help="Select the state where you would like to work.")
+    state_full_names = df_cleaned["FULL_WORKSITE_STATE"].unique().tolist()
+
+    stateInfo = st.multiselect('Select U.S. Work State(s)', state_full_names, help="Select the state where you would like to work.")
 
     employeenum_categories = ['<50', '51-200', '201-500', '501-1000', '1001-5000', '5001-10000', '10000+']
     employeenumInfo = st.multiselect('Select Company Size(s)', employeenum_categories)
@@ -688,7 +690,7 @@ if submit_button:
         filters = {
             'SOC_TITLE': titleInfo,
             'SECTOR_CODE': selected_sector_codes,
-            'WORKSITE_STATE': stateInfo,
+            'FULL_WORKSITE_STATE': stateInfo,
             'EMPLOYEE_COUNT_CATEGORY': employeenumInfo,
             'COMPANY_AGE_CATEGORY': companyageInfo
         }
@@ -740,9 +742,9 @@ if submit_button:
             result_df['JOB_COUNT'] = result_df.groupby('EMPLOYER_NAME_CLEAN')['EMPLOYER_NAME_CLEAN'].transform('count')
 
             # Condense worksite state and SOC title
-            grouped_ws = result_df.groupby('EMPLOYER_NAME_CLEAN')['WORKSITE_STATE'].agg(list).reset_index()
-            grouped_ws['WORKSITE_STATE'] = grouped_ws['WORKSITE_STATE'].apply(lambda x: list(set(x)))  # Remove duplicates
-            grouped_ws['OTHER_WORKSITE_STATE'] = grouped_ws['WORKSITE_STATE'].apply(lambda x: x[1:] if len(x) > 1 else [])
+            grouped_ws = result_df.groupby('EMPLOYER_NAME_CLEAN')['FULL_WORKSITE_STATE'].agg(list).reset_index()
+            grouped_ws['WORKSITE_STATE'] = grouped_ws['FULL_WORKSITE_STATE'].apply(lambda x: list(set(x)))  # Remove duplicates
+            grouped_ws['OTHER_WORKSITE_STATE'] = grouped_ws['FULL_WORKSITE_STATE'].apply(lambda x: x[1:] if len(x) > 1 else [])
             result_df = result_df.merge(grouped_ws, on='EMPLOYER_NAME_CLEAN', how='left')
             result_df.rename(columns={'WORKSITE_STATE_x': 'WORKSITE_STATE'}, inplace=True)
             result_df.drop(columns=['WORKSITE_STATE_y'], inplace=True)
@@ -756,7 +758,7 @@ if submit_button:
 
             # Display only unique outputs
             result_df.drop_duplicates(subset=['EMPLOYER_NAME_CLEAN'], keep='first', inplace=True)
-            result_df = result_df[['EMPLOYER_NAME', 'SOC_TITLE', 'WORKSITE_STATE', 'PREVAILING_WAGE_ANNUAL', 
+            result_df = result_df[['EMPLOYER_NAME', 'SOC_TITLE', 'FULL_WORKSITE_STATE', 'PREVAILING_WAGE_ANNUAL', 
                                 'EMPLOYEE_COUNT_CATEGORY', 'COMPANY_AGE_CATEGORY', 'COMPANY_LINK', 'SPONSORED', 
                                 'JOB_COUNT', 'OTHER_WORKSITE_STATE', 'OTHER_SOC_TITLES']]
 
