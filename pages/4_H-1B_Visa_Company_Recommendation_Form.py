@@ -584,7 +584,7 @@ with st.form(key='my_form'):
     # text_search = st.text_input("Search for SOC Title", help="Type here to retrieve results in dropdown menu below.")
     # filtered_df = soc_titles_df[soc_titles_df["OCCUPATION"].str.contains(text_search, case=False, na=False)]
     # titleInfo = st.multiselect("Select SOC Title(s)", options=soc_titles_df["OCCUPATION"].tolist())
-    titleInfo = st.multiselect("Select SOC Title(s)", options=soc_titles_df["OCCUPATION"].tolist())
+    titleInfo = st.multiselect("Select SOC Title(s)", options=sorted(soc_titles_df["OCCUPATION"].tolist()))
 
     # Industry codes
     codeOptions = ['11 - Agriculture, Forestry, Fishing and Hunting', '22 - Utilities', 
@@ -651,7 +651,7 @@ with st.form(key='my_form'):
     #                        "OK", "OR", "PA", "PR", "PUERTO RICO", "PW", "RI", "SC", "SD", "TN", "TX", "UT", "VA", 
     #                        "VI", "VIRGIN ISLANDS", "VT", "WA", "WI", "WV", "WY"]
 
-    state_full_names = df_cleaned["FULL_WORKSITE_STATE"].unique().tolist()
+    state_full_names = sorted(df_cleaned["FULL_WORKSITE_STATE"].unique().tolist())
 
     stateInfo = st.multiselect('Select U.S. Work State(s)', state_full_names, help="Select the state where you would like to work.")
 
