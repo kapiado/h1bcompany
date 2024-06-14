@@ -401,76 +401,42 @@ def main():
                 # Add job count column
                 result_df['JOB_COUNT'] = result_df.groupby('EMPLOYER_NAME_CLEAN')['EMPLOYER_NAME_CLEAN'].transform('count')
 
-                # # Condense worksite state
-                # grouped_ws = result_df.groupby('EMPLOYER_NAME_CLEAN')['FULL_WORKSITE_STATE'].agg(list).reset_index()
-                # grouped_ws['FULL_WORKSITE_STATE_LIST'] = grouped_ws['FULL_WORKSITE_STATE'].apply(lambda x: list(set(x)))  # Remove duplicates
-                # grouped_ws['OTHER_WORKSITE_STATE'] = grouped_ws['FULL_WORKSITE_STATE'].apply(lambda x: x[1:] if len(x) > 1 else [])
-                # result_df = result_df.merge(grouped_ws[['EMPLOYER_NAME_CLEAN', 'FULL_WORKSITE_STATE_LIST', 'OTHER_WORKSITE_STATE']], on='EMPLOYER_NAME_CLEAN', how='left')
-                # result_df['OTHER_WORKSITE_STATE'] = result_df['OTHER_WORKSITE_STATE'].drop_duplicates()
-                # result_df.rename(columns={'FULL_WORKSITE_STATE_LIST': 'FULL_WORKSITE_STATE'}, inplace=True)
-
-                # # Condense SOC title
-                # grouped_soc = result_df.groupby('EMPLOYER_NAME_CLEAN')['SOC_TITLE'].agg(list).reset_index()
-                # grouped_soc['SOC_TITLE_LIST'] = grouped_soc['SOC_TITLE'].apply(lambda x: list(set(x)))  # Remove duplicates
-                # grouped_soc['OTHER_SOC_TITLES'] = grouped_soc['SOC_TITLE'].apply(lambda x: x[1:] if len(x) > 1 else [])
-                # result_df = result_df.merge(grouped_soc[['EMPLOYER_NAME_CLEAN', 'SOC_TITLE_LIST', 'OTHER_SOC_TITLES']], on='EMPLOYER_NAME_CLEAN', how='left')
-                # result_df['OTHER_SOC_TITLES'] = result_df['OTHER_SOC_TITLES'].drop_duplicates()
-                # result_df.rename(columns={'SOC_TITLE_LIST': 'SOC_TITLE'}, inplace=True)
-
-                # # Drop any possible duplicate columns before final selection
-                # result_df = result_df.loc[:,~result_df.columns.duplicated()]
-
-                # # Display only unique outputs
-                # result_df.drop_duplicates(subset=['EMPLOYER_NAME_CLEAN'], keep='first', inplace=True)
-                # result_df = result_df[['EMPLOYER_NAME', 'SOC_TITLE', 'FULL_WORKSITE_STATE', 'PREVAILING_WAGE_ANNUAL', 
-                #                     'EMPLOYEE_COUNT_CATEGORY', 'COMPANY_AGE_CATEGORY', 'COMPANY_LINK', 
-                #                     'JOB_COUNT', 'OTHER_WORKSITE_STATE', 'OTHER_SOC_TITLES']]
-
-                # # Display top recommendations
-                # st.write("#### Top 10 Recommendations")
-                # st.dataframe(result_df.head(10), hide_index=True)
-
-                # # Download link for full results
-                # csv = result_df.to_csv(index=False)
-                # b64 = base64.b64encode(csv.encode()).decode()
-                # href = f'<a href="data:file/csv;base64,{b64}" download="h1b_recommendations.csv">Download CSV File</a>'
-                # st.markdown(href, unsafe_allow_html=True)
-
-                # Aggregate and remove duplicates for 'FULL_WORKSITE_STATE' and 'SOC_TITLE'
-                grouped_ws = result_df.groupby('EMPLOYER_NAME_CLEAN')['FULL_WORKSITE_STATE'].agg(lambda x: list(set(x))).reset_index()
+                # Condense worksite state
+                grouped_ws = result_df.groupby('EMPLOYER_NAME_CLEAN')['FULL_WORKSITE_STATE'].agg(list).reset_index()
+                grouped_ws['FULL_WORKSITE_STATE_LIST'] = grouped_ws['FULL_WORKSITE_STATE'].apply(lambda x: list(set(x)))  # Remove duplicates
                 grouped_ws['OTHER_WORKSITE_STATE'] = grouped_ws['FULL_WORKSITE_STATE'].apply(lambda x: x[1:] if len(x) > 1 else [])
+                result_df = result_df.merge(grouped_ws[['EMPLOYER_NAME_CLEAN', 'FULL_WORKSITE_STATE_LIST', 'OTHER_WORKSITE_STATE']], on='EMPLOYER_NAME_CLEAN', how='left')
+                result_df.rename(columns={'FULL_WORKSITE_STATE_LIST': 'FULL_WORKSITE_STATE'}, inplace=True)
 
-                grouped_soc = result_df.groupby('EMPLOYER_NAME_CLEAN')['SOC_TITLE'].agg(lambda x: list(set(x))).reset_index()
+                # Condense SOC title
+                grouped_soc = result_df.groupby('EMPLOYER_NAME_CLEAN')['SOC_TITLE'].agg(list).reset_index()
+                grouped_soc['SOC_TITLE_LIST'] = grouped_soc['SOC_TITLE'].apply(lambda x: list(set(x)))  # Remove duplicates
                 grouped_soc['OTHER_SOC_TITLES'] = grouped_soc['SOC_TITLE'].apply(lambda x: x[1:] if len(x) > 1 else [])
-
-                # Merge aggregated data back to result_df
-                result_df = result_df.merge(grouped_ws[['EMPLOYER_NAME_CLEAN', 'FULL_WORKSITE_STATE', 'OTHER_WORKSITE_STATE']], on='EMPLOYER_NAME_CLEAN', how='left')
-                result_df = result_df.merge(grouped_soc[['EMPLOYER_NAME_CLEAN', 'SOC_TITLE', 'OTHER_SOC_TITLES']], on='EMPLOYER_NAME_CLEAN', how='left')
+                result_df = result_df.merge(grouped_soc[['EMPLOYER_NAME_CLEAN', 'SOC_TITLE_LIST', 'OTHER_SOC_TITLES']], on='EMPLOYER_NAME_CLEAN', how='left')
+                
+                result_df.rename(columns={'SOC_TITLE_LIST': 'SOC_TITLE'}, inplace=True)
 
                 # Drop any possible duplicate columns before final selection
-                result_df = result_df.loc[:, ~result_df.columns.duplicated()]
+                result_df = result_df.loc[:,~result_df.columns.duplicated()]
 
-                # Drop duplicates based on 'EMPLOYER_NAME_CLEAN'
+                # Display only unique outputs
                 result_df.drop_duplicates(subset=['EMPLOYER_NAME_CLEAN'], keep='first', inplace=True)
-
-                # Rename columns for clarity
-                result_df.rename(columns={'FULL_WORKSITE_STATE': 'FULL_WORKSITE_STATE_LIST', 'SOC_TITLE': 'SOC_TITLE_LIST'}, inplace=True)
-
-                # Select columns for final output
-                result_df = result_df[['EMPLOYER_NAME_CLEAN', 'FULL_WORKSITE_STATE_LIST', 'OTHER_WORKSITE_STATE', 'SOC_TITLE_LIST', 'OTHER_SOC_TITLES']]
-
-                st.write("#### Top Recommendations")
+                result_df = result_df[['EMPLOYER_NAME', 'SOC_TITLE', 'FULL_WORKSITE_STATE', 'PREVAILING_WAGE_ANNUAL', 
+                                    'EMPLOYEE_COUNT_CATEGORY', 'COMPANY_AGE_CATEGORY', 'COMPANY_LINK', 
+                                    'JOB_COUNT', 'OTHER_WORKSITE_STATE', 'OTHER_SOC_TITLES']]
+                
+                result_df['OTHER_WORKSITE_STATE'] = result_df['OTHER_WORKSITE_STATE'].drop_duplicates()
+                result_df['OTHER_SOC_TITLES'] = result_df['OTHER_SOC_TITLES'].drop_duplicates()
+                # Display top recommendations
+                st.write("#### Top 10 Recommendations")
                 st.dataframe(result_df.head(10), hide_index=True)
 
                 # Download link for full results
-                csv_data = result_df.to_csv(index=False)
-                b64 = base64.b64encode(csv_data.encode()).decode()
-
-                # Create the HTML download link
+                csv = result_df.to_csv(index=False)
+                b64 = base64.b64encode(csv.encode()).decode()
                 href = f'<a href="data:file/csv;base64,{b64}" download="h1b_recommendations.csv">Download CSV File</a>'
-
-                # Display the link in Streamlit
                 st.markdown(href, unsafe_allow_html=True)
+
 
     # Add a horizontal line using HTML
     st.write("<hr>", unsafe_allow_html=True)
