@@ -73,6 +73,24 @@ with col2:
 # Add a horizontal line using HTML
 st.write("<hr>", unsafe_allow_html=True)
 
+st.header("H-1B Visa Application Process")
+st.write("")
+
+# Centered layout
+col1, col2, col3 = st.columns([1, 2, 1])
+
+body7 = st.empty()
+body7.write("The flowchart below presents a high-level view of the H-1B visa application process.")
+
+# Display the image in the middle column
+# Adding image with caption
+with col2:
+    image6 = Image.open(path+'H-1B_Visa_Application_Process.png')
+    st.image(image6,caption='Figure 4: H-1B Visa Application Process Flowchart')
+
+# Add a horizontal line using HTML
+st.write("<hr>", unsafe_allow_html=True)
+
 st.header("H-1B Visa Eligibility")
 st.write("")
 
