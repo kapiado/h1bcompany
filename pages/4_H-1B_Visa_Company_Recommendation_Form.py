@@ -762,28 +762,26 @@ if submit_button:
             #                     'EMPLOYEE_COUNT_CATEGORY', 'COMPANY_AGE_CATEGORY', 'COMPANY_LINK', 'SPONSORED', 
             #                     'JOB_COUNT', 'OTHER_WORKSITE_STATE', 'OTHER_SOC_TITLES']]
 
-                        # Condense worksite state and SOC title
+            # Condense worksite state
             grouped_ws = result_df.groupby('EMPLOYER_NAME_CLEAN')['FULL_WORKSITE_STATE'].agg(list).reset_index()
-            grouped_ws['WORKSITE_STATE_LIST'] = grouped_ws['FULL_WORKSITE_STATE'].apply(lambda x: list(set(x)))  # Remove duplicates
-            grouped_ws['OTHER_WORKSITE_STATE'] = grouped_ws['WORKSITE_STATE_LIST'].apply(lambda x: x[1:] if len(x) > 1 else [])
-            result_df = result_df.merge(grouped_ws[['EMPLOYER_NAME_CLEAN', 'WORKSITE_STATE_LIST', 'OTHER_WORKSITE_STATE']], on='EMPLOYER_NAME_CLEAN', how='left')
-            result_df.rename(columns={'WORKSITE_STATE': 'PRIMARY_WORKSITE_STATE', 'WORKSITE_STATE_LIST': 'OTHER_WORKSITE_STATE'}, inplace=True)
+            grouped_ws['FULL_WORKSITE_STATE_LIST'] = grouped_ws['FULL_WORKSITE_STATE'].apply(lambda x: list(set(x)))  # Remove duplicates
+            grouped_ws['OTHER_WORKSITE_STATE'] = grouped_ws['FULL_WORKSITE_STATE_LIST'].apply(lambda x: x[1:] if len(x) > 1 else [])
+            result_df = result_df.merge(grouped_ws[['EMPLOYER_NAME_CLEAN', 'FULL_WORKSITE_STATE_LIST', 'OTHER_WORKSITE_STATE']], on='EMPLOYER_NAME_CLEAN', how='left')
+            result_df.rename(columns={'FULL_WORKSITE_STATE_LIST': 'FULL_WORKSITE_STATE'}, inplace=True)
 
+            # Condense SOC title
             grouped_soc = result_df.groupby('EMPLOYER_NAME_CLEAN')['SOC_TITLE'].agg(list).reset_index()
             grouped_soc['SOC_TITLE_LIST'] = grouped_soc['SOC_TITLE'].apply(lambda x: list(set(x)))  # Remove duplicates
             grouped_soc['OTHER_SOC_TITLES'] = grouped_soc['SOC_TITLE_LIST'].apply(lambda x: x[1:] if len(x) > 1 else [])
             result_df = result_df.merge(grouped_soc[['EMPLOYER_NAME_CLEAN', 'SOC_TITLE_LIST', 'OTHER_SOC_TITLES']], on='EMPLOYER_NAME_CLEAN', how='left')
-            result_df.rename(columns={'SOC_TITLE': 'PRIMARY_SOC_TITLE', 'SOC_TITLE_LIST': 'SOC_TITLE'}, inplace=True)
+            result_df.rename(columns={'SOC_TITLE_LIST': 'SOC_TITLE'}, inplace=True)
 
             # Display only unique outputs
             result_df.drop_duplicates(subset=['EMPLOYER_NAME_CLEAN'], keep='first', inplace=True)
-            result_df = result_df[['EMPLOYER_NAME', 'SOC_TITLE', 'PRIMARY_WORKSITE_STATE', 'PREVAILING_WAGE_ANNUAL', 
+            result_df = result_df[['EMPLOYER_NAME', 'SOC_TITLE', 'FULL_WORKSITE_STATE', 'PREVAILING_WAGE_ANNUAL', 
                                 'EMPLOYEE_COUNT_CATEGORY', 'COMPANY_AGE_CATEGORY', 'COMPANY_LINK', 'SPONSORED', 
                                 'JOB_COUNT', 'OTHER_WORKSITE_STATE', 'OTHER_SOC_TITLES']]
 
-
             # Display top recommendations
             st.write("#### Top 10 Recommendations")
-            #st.write(result_df.head(10))
-            st.dataframe(result_df.head(10),hide_index=True)
-            # don't display
+            st.dataframe(result_df.head(10), hide_index=True)
