@@ -259,6 +259,35 @@ def main():
     # Load SOC Titles from Google Sheet (cached)
     soc_titles_df = load_soc_titles()
 
+    # Initialize session state for selected sector codes and subsector options
+    if 'selected_sector_codes' not in st.session_state:
+        st.session_state.selected_sector_codes = []
+    
+    if 'subsector_options' not in st.session_state:
+        st.session_state.subsector_options = []
+
+    # Function to update subsector options based on selected sector codes
+    def update_subsector_options(selected_sector_codes):
+        if selected_sector_codes:
+            # Filter the DataFrame based on selected sector codes
+            filtered_df = df_cleaned[df_cleaned['SECTOR_CODE'].isin(selected_sector_codes)]
+
+            # Sort the filtered DataFrame by subsector code
+            sorted_df = filtered_df.sort_values(by='SUBSECTOR_CODE')
+
+            # Create a new column combining subsector code and name
+            sorted_df['SUBSECTOR_CODE_NAME'] = sorted_df['SUBSECTOR_CODE'].astype(str) + ' - ' + sorted_df['SUBSECTOR_NAME']
+
+            # Get unique subsector code names as a list
+            subsector_options = sorted_df['SUBSECTOR_CODE_NAME'].unique().tolist()
+
+            # Update session state with new subsector options
+            st.session_state.subsector_options = subsector_options
+            st.session_state.selected_sector_codes = selected_sector_codes
+        else:
+            # Clear subsector options in session state
+            st.session_state.subsector_options = []
+            st.session_state.selected_sector_codes = []
     # Create the form
     with st.form(key='my_form'):
         st.subheader("Selections")
@@ -277,16 +306,11 @@ def main():
                        '62 - Health Care and Social Assistance', '71 - Arts, Entertainment, and Recreation', '72 - Accommodation and Food Services', 
                        '81 - Other Services (except Public Administration)']
         codeInfo = st.multiselect('Select industry/industries', codeOptions, help="Select the most appropriate Industry Code as found here https://www.census.gov/naics/?58967?yearbck=2022")
-        selected_sector_codes = [int(code.split(' ')[0]) for code in codeInfo]
+        # Update subsector options based on selected sector codes
+        update_subsector_options(codeInfo)
 
-        # Filter subsector options based on selected sectors
-        if selected_sector_codes:
-            filtered_df = df_cleaned[df_cleaned['SECTOR_CODE'].apply(lambda x: any(code.split()[0] == str(x) for code in codeInfo))]
-            subsectorOptions = filtered_df['SUBSECTOR_NAME'].unique().tolist()
-        else:
-            subsectorOptions = df_cleaned['SUBSECTOR_NAME'].unique().tolist()
-
-        subsectorInfo = st.multiselect('Select subsector(s)', subsectorOptions)
+        # Use session state for subsector options in multiselect widget
+        subsectorInfo = st.multiselect('Select Subsector Code(s)', st.session_state.subsector_options, help="Select the appropriate Subsector Code based on your selected Sector Code(s).")
 
         state_full_names = sorted(df_cleaned["FULL_WORKSITE_STATE"].unique().tolist())
         stateInfo = st.multiselect('Select U.S. Work State/Territory(s)', state_full_names, help="Select the state/territory where you would like to work.")
