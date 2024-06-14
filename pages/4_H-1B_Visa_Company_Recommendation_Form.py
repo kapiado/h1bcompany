@@ -380,6 +380,9 @@ def main():
                 return df.sort_values(by='topsis_score', ascending=False)
 
             weights = {
+                'SOC_TITLE': titleWeight,
+                'SECTOR_CODE': codeWeight,
+                'FULL_WORKSITE_STATE': stateWeight,
                 'EMPLOYEE_COUNT_CATEGORY': employeenumWeight,
                 'COMPANY_AGE_CATEGORY': companyageWeight,
                 'SPONSORED': 5  # Sponsor weight is fixed
