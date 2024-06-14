@@ -519,7 +519,29 @@ import streamlit as st
 import numpy as np
 import warnings
 
+
 warnings.filterwarnings('ignore')
+
+# Inject CSS to expand page width and make the table fit on the screen
+st.markdown(
+    """
+    <style>
+    .reportview-container .main .block-container{
+        max-width: 100%;
+        padding: 1rem;
+    }
+    .reportview-container .main{
+        color: black;
+        background-color: white;
+    }
+    .dataframe-container {
+        overflow: auto;
+        white-space: nowrap;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 st.title('H-1B Visa Company Recommendation Form') 
 st.write("This app recommends companies that are likely to sponsor an H-1B visa based on your user input. Use the form below to get started!")
@@ -782,7 +804,7 @@ if submit_button:
             # Display only unique outputs
             result_df.drop_duplicates(subset=['EMPLOYER_NAME_CLEAN'], keep='first', inplace=True)
             result_df = result_df[['EMPLOYER_NAME', 'SOC_TITLE', 'FULL_WORKSITE_STATE', 'PREVAILING_WAGE_ANNUAL', 
-                                'EMPLOYEE_COUNT_CATEGORY', 'COMPANY_AGE_CATEGORY', 'COMPANY_LINK', 'SPONSORED', 
+                                'EMPLOYEE_COUNT_CATEGORY', 'COMPANY_AGE_CATEGORY', 'COMPANY_LINK', 
                                 'JOB_COUNT', 'OTHER_WORKSITE_STATE', 'OTHER_SOC_TITLES']]
 
             # Display top recommendations
