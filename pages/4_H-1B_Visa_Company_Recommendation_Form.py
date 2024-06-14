@@ -314,7 +314,7 @@ def main():
         update_subsector_options(selected_sector_codes)
 
         # Use session state for subsector options in multiselect widget
-        subsectorInfo = st.multiselect('Select Subsector Code(s)', st.session_state.subsector_options, help="Select the appropriate Subsector Code based on your selected Sector Code(s).")
+        subsectorInfo = st.multiselect('Select Subsector Code(s)', st.session_state.subsector_options, help="Select the appropriate Subsector Code based on your selected Sector Code(s). You may need to first submit the form with the industries selected prior to being allowed to select subsector code(s).")
 
         state_full_names = sorted(df_cleaned["FULL_WORKSITE_STATE"].unique().tolist())
         stateInfo = st.multiselect('Select U.S. Work State/Territory(s)', state_full_names, help="Select the state/territory where you would like to work.")
