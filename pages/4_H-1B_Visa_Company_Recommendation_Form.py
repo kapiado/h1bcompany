@@ -758,7 +758,7 @@ if submit_button:
 
             # Display only unique outputs
             result_df.drop_duplicates(subset=['EMPLOYER_NAME_CLEAN'], keep='first', inplace=True)
-            result_df = result_df[['EMPLOYER_NAME', 'SOC_TITLE', 'FULL_WORKSITE_STATE', 'PREVAILING_WAGE_ANNUAL', 
+            result_df = result_df[['EMPLOYER_NAME', 'SOC_TITLE', 'WORKSITE_STATE', 'PREVAILING_WAGE_ANNUAL', 
                                 'EMPLOYEE_COUNT_CATEGORY', 'COMPANY_AGE_CATEGORY', 'COMPANY_LINK', 'SPONSORED', 
                                 'JOB_COUNT', 'OTHER_WORKSITE_STATE', 'OTHER_SOC_TITLES']]
 
