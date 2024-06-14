@@ -310,7 +310,7 @@ def main():
                 # Clear subsector options in session state
                 st.session_state.subsector_options = []
                 st.session_state.selected_sector_codes = []
-            update_subsector_options(codeInfo)
+        update_subsector_options(codeInfo)
 
         # Use session state for subsector options in multiselect widget
         subsectorInfo = st.multiselect('Select Subsector Code(s)', st.session_state.subsector_options, help="Select the appropriate Subsector Code based on your selected Sector Code(s).")
