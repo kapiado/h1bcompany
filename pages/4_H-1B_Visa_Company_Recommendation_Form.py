@@ -311,7 +311,7 @@ def main():
         #  Extract selected sector codes
         selected_sector_codes = [int(code.split(' ')[0]) for code in codeInfo]
         
-        update_subsector_options(codeInfo)
+        update_subsector_options(selected_sector_codes)
 
         # Use session state for subsector options in multiselect widget
         subsectorInfo = st.multiselect('Select Subsector Code(s)', st.session_state.subsector_options, help="Select the appropriate Subsector Code based on your selected Sector Code(s).")
