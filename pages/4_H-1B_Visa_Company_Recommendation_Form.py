@@ -406,6 +406,10 @@ def main():
                 grouped_ws['FULL_WORKSITE_STATE_LIST'] = grouped_ws['FULL_WORKSITE_STATE'].apply(lambda x: list(set(x)))  # Remove duplicates
                 grouped_ws['OTHER_WORKSITE_STATE'] = grouped_ws['FULL_WORKSITE_STATE'].apply(lambda x: x[1:] if len(x) > 1 else [])
                 result_df = result_df.merge(grouped_ws[['EMPLOYER_NAME_CLEAN', 'FULL_WORKSITE_STATE_LIST', 'OTHER_WORKSITE_STATE']], on='EMPLOYER_NAME_CLEAN', how='left')
+                # Convert lists in 'OTHER_WORKSITE_STATE' to tuples
+                result_df['OTHER_WORKSITE_STATE'] = result_df['OTHER_WORKSITE_STATE'].apply(tuple)
+                
+                # Drop duplicates based on 'OTHER_WORKSITE_STATE' column
                 result_df.drop_duplicates(subset=['OTHER_WORKSITE_STATE'], inplace=True)
                 result_df.rename(columns={'FULL_WORKSITE_STATE_LIST': 'FULL_WORKSITE_STATE'}, inplace=True)
 
@@ -414,6 +418,10 @@ def main():
                 grouped_soc['SOC_TITLE_LIST'] = grouped_soc['SOC_TITLE'].apply(lambda x: list(set(x)))  # Remove duplicates
                 grouped_soc['OTHER_SOC_TITLES'] = grouped_soc['SOC_TITLE'].apply(lambda x: x[1:] if len(x) > 1 else [])
                 result_df = result_df.merge(grouped_soc[['EMPLOYER_NAME_CLEAN', 'SOC_TITLE_LIST', 'OTHER_SOC_TITLES']], on='EMPLOYER_NAME_CLEAN', how='left')
+                # Convert lists in 'OTHER_SOC_TITLES' to tuples
+                result_df['OTHER_SOC_TITLES'] = result_df['OTHER_SOC_TITLES'].apply(tuple)
+
+                # Drop duplicates based on 'OTHER_SOC_TITLES' column
                 result_df.drop_duplicates(subset=['OTHER_SOC_TITLES'], inplace=True)
                 result_df.rename(columns={'SOC_TITLE_LIST': 'SOC_TITLE'}, inplace=True)
 
