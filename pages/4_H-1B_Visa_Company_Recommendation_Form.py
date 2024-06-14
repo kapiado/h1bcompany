@@ -277,6 +277,10 @@ def main():
                        '62 - Health Care and Social Assistance', '71 - Arts, Entertainment, and Recreation', '72 - Accommodation and Food Services', 
                        '81 - Other Services (except Public Administration)']
         codeInfo = st.multiselect('Select industry/industries', codeOptions, help="Select the most appropriate Industry Code as found here https://www.census.gov/naics/?58967?yearbck=2022")
+        selected_sector_codes = [int(code.split(' ')[0]) for code in codeInfo]
+        subsectorOptions = df_cleaned['SUBSECTOR_NAME'].unique().tolist()
+        
+        subsectorInfo = st.multiselect('Select subsector(s)', subsectorOptions)
 
         state_full_names = sorted(df_cleaned["FULL_WORKSITE_STATE"].unique().tolist())
         stateInfo = st.multiselect('Select U.S. Work State/Territory(s)', state_full_names, help="Select the state/territory where you would like to work.")
