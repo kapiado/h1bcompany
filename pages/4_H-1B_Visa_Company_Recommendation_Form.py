@@ -259,35 +259,6 @@ def main():
     # Load SOC Titles from Google Sheet (cached)
     soc_titles_df = load_soc_titles()
 
-    # Initialize session state for selected sector codes and subsector options
-    if 'selected_sector_codes' not in st.session_state:
-        st.session_state.selected_sector_codes = []
-    
-    if 'subsector_options' not in st.session_state:
-        st.session_state.subsector_options = []
-
-    # Function to update subsector options based on selected sector codes
-    def update_subsector_options(selected_sector_codes):
-        if selected_sector_codes:
-            # Filter the DataFrame based on selected sector codes
-            filtered_df = df_cleaned[df_cleaned['SECTOR_CODE'].isin(selected_sector_codes)]
-
-            # Sort the filtered DataFrame by subsector code
-            sorted_df = filtered_df.sort_values(by='SUBSECTOR_CODE')
-
-            # Create a new column combining subsector code and name
-            sorted_df['SUBSECTOR_CODE_NAME'] = sorted_df['SUBSECTOR_CODE'].astype(str) + ' - ' + sorted_df['SUBSECTOR_NAME']
-
-            # Get unique subsector code names as a list
-            subsector_options = sorted_df['SUBSECTOR_CODE_NAME'].unique().tolist()
-
-            # Update session state with new subsector options
-            st.session_state.subsector_options = subsector_options
-            st.session_state.selected_sector_codes = selected_sector_codes
-        else:
-            # Clear subsector options in session state
-            st.session_state.subsector_options = []
-            st.session_state.selected_sector_codes = []
     # Create the form
     with st.form(key='my_form'):
         st.subheader("Selections")
@@ -306,8 +277,40 @@ def main():
                        '62 - Health Care and Social Assistance', '71 - Arts, Entertainment, and Recreation', '72 - Accommodation and Food Services', 
                        '81 - Other Services (except Public Administration)']
         codeInfo = st.multiselect('Select industry/industries', codeOptions, help="Select the most appropriate Industry Code as found here https://www.census.gov/naics/?58967?yearbck=2022")
+        #  Extract selected sector codes
+        selected_sector_codes = [int(code.split(' ')[0]) for code in codeInfo]
+        
         # Update subsector options based on selected sector codes
-        update_subsector_options(codeInfo)
+            # Initialize session state for selected sector codes and subsector options
+        if 'selected_sector_codes' not in st.session_state:
+            st.session_state.selected_sector_codes = []
+        
+        if 'subsector_options' not in st.session_state:
+            st.session_state.subsector_options = []
+
+        # Function to update subsector options based on selected sector codes
+        def update_subsector_options(selected_sector_codes):
+            if selected_sector_codes:
+                # Filter the DataFrame based on selected sector codes
+                filtered_df = df_cleaned[df_cleaned['SECTOR_CODE'].isin(selected_sector_codes)]
+
+                # Sort the filtered DataFrame by subsector code
+                sorted_df = filtered_df.sort_values(by='SUBSECTOR_CODE')
+
+                # Create a new column combining subsector code and name
+                sorted_df['SUBSECTOR_CODE_NAME'] = sorted_df['SUBSECTOR_CODE'].astype(str) + ' - ' + sorted_df['SUBSECTOR_NAME']
+
+                # Get unique subsector code names as a list
+                subsector_options = sorted_df['SUBSECTOR_CODE_NAME'].unique().tolist()
+
+                # Update session state with new subsector options
+                st.session_state.subsector_options = subsector_options
+                st.session_state.selected_sector_codes = selected_sector_codes
+            else:
+                # Clear subsector options in session state
+                st.session_state.subsector_options = []
+                st.session_state.selected_sector_codes = []
+            update_subsector_options(codeInfo)
 
         # Use session state for subsector options in multiselect widget
         subsectorInfo = st.multiselect('Select Subsector Code(s)', st.session_state.subsector_options, help="Select the appropriate Subsector Code based on your selected Sector Code(s).")
@@ -352,40 +355,84 @@ def main():
                 'COMPANY_AGE_CATEGORY': companyageInfo
             }
 
-            # Apply filters
-            filtered_df = df.copy()
+            for col, values in filters.items():
+                if values:
+                    df = df[df[col].isin(values)]
 
-            for column, selected_values in filters.items():
-                if selected_values:
-                    filtered_df = filtered_df[filtered_df[column].isin(selected_values)]
+            return df
 
-            return filtered_df
+        filtered_df = apply_filters(df_cleaned)
 
-        # Apply filters to the cleaned data
-        selected_sector_codes = [code.split(' - ')[0] for code in codeInfo]
-        filtered_data = apply_filters(df_cleaned)
+        if filtered_df.empty:
+            st.warning("No companies found matching your criteria. Please adjust your filters and try again.")
+        else:
+            def topsis(df, weights):
+                df = df.copy()
+                numeric_cols = df.select_dtypes(include=[np.number]).columns.intersection(weights.keys())
+                
+                # Normalize numeric columns
+                for col in numeric_cols:
+                    df[col] = df[col] / np.sqrt((df[col] ** 2).sum())
 
-        # Calculate scores based on user weights
-        filtered_data['SCORE'] = (
-            titleWeight * filtered_data['SPONSORED'] +
-            codeWeight * filtered_data['SPONSORED'] +
-            stateWeight * filtered_data['SPONSORED'] +
-            employeenumWeight * filtered_data['SPONSORED'] +
-            companyageWeight * filtered_data['SPONSORED']
-        )
+                # Apply weights to numeric columns
+                weighted_scores = df[numeric_cols].multiply(weights, axis=1)
+                df['topsis_score'] = weighted_scores.sum(axis=1)
+                return df.sort_values(by='topsis_score', ascending=False)
 
-        # Sort by score in descending order and select top recommendations
-        result_df = filtered_data.sort_values(by='SCORE', ascending=False)
+            weights = {
+                'EMPLOYEE_COUNT_CATEGORY': employeenumWeight,
+                'COMPANY_AGE_CATEGORY': companyageWeight,
+                'SPONSORED': 5  # Sponsor weight is fixed
+            }
 
-        # Display top recommendations
-        st.write("#### Top 10 Recommendations")
-        st.dataframe(result_df.head(10), hide_index=True)
+            # Normalize weights
+            total_weight = sum(weights.values())
+            normalized_weights = {k: v / total_weight for k, v in weights.items()}
 
-        # Download link for full results
-        csv = result_df.to_csv(index=False)
-        b64 = base64.b64encode(csv.encode()).decode()
-        href = f'<a href="data:file/csv;base64,{b64}" download="h1b_recommendations.csv">Download CSV File</a>'
-        st.markdown(href, unsafe_allow_html=True)
+            # Check and align weights with numeric columns
+            numeric_cols = filtered_df.select_dtypes(include=[np.number]).columns
+            valid_weights = {k: v for k, v in normalized_weights.items() if k in numeric_cols}
+
+            if len(valid_weights) == 0:
+                st.error("No valid numeric columns found for TOPSIS calculation.")
+            else:
+                result_df = topsis(filtered_df, valid_weights)
+
+                # Add job count column
+                result_df['JOB_COUNT'] = result_df.groupby('EMPLOYER_NAME_CLEAN')['EMPLOYER_NAME_CLEAN'].transform('count')
+
+                # Condense worksite state
+                grouped_ws = result_df.groupby('EMPLOYER_NAME_CLEAN')['FULL_WORKSITE_STATE'].agg(list).reset_index()
+                grouped_ws['FULL_WORKSITE_STATE_LIST'] = grouped_ws['FULL_WORKSITE_STATE'].apply(lambda x: list(set(x)))  # Remove duplicates
+                grouped_ws['OTHER_WORKSITE_STATE'] = grouped_ws['FULL_WORKSITE_STATE_LIST'].apply(lambda x: x[1:] if len(x) > 1 else [])
+                result_df = result_df.merge(grouped_ws[['EMPLOYER_NAME_CLEAN', 'FULL_WORKSITE_STATE_LIST', 'OTHER_WORKSITE_STATE']], on='EMPLOYER_NAME_CLEAN', how='left')
+                result_df.rename(columns={'FULL_WORKSITE_STATE_LIST': 'FULL_WORKSITE_STATE'}, inplace=True)
+
+                # Condense SOC title
+                grouped_soc = result_df.groupby('EMPLOYER_NAME_CLEAN')['SOC_TITLE'].agg(list).reset_index()
+                grouped_soc['SOC_TITLE_LIST'] = grouped_soc['SOC_TITLE'].apply(lambda x: list(set(x)))  # Remove duplicates
+                grouped_soc['OTHER_SOC_TITLES'] = grouped_soc['SOC_TITLE_LIST'].apply(lambda x: x[1:] if len(x) > 1 else [])
+                result_df = result_df.merge(grouped_soc[['EMPLOYER_NAME_CLEAN', 'SOC_TITLE_LIST', 'OTHER_SOC_TITLES']], on='EMPLOYER_NAME_CLEAN', how='left')
+                result_df.rename(columns={'SOC_TITLE_LIST': 'SOC_TITLE'}, inplace=True)
+
+                # Drop any possible duplicate columns before final selection
+                result_df = result_df.loc[:,~result_df.columns.duplicated()]
+
+                # Display only unique outputs
+                result_df.drop_duplicates(subset=['EMPLOYER_NAME_CLEAN'], keep='first', inplace=True)
+                result_df = result_df[['EMPLOYER_NAME', 'SOC_TITLE', 'FULL_WORKSITE_STATE', 'PREVAILING_WAGE_ANNUAL', 
+                                    'EMPLOYEE_COUNT_CATEGORY', 'COMPANY_AGE_CATEGORY', 'COMPANY_LINK', 
+                                    'JOB_COUNT', 'OTHER_WORKSITE_STATE', 'OTHER_SOC_TITLES']]
+
+                # Display top recommendations
+                st.write("#### Top 10 Recommendations")
+                st.dataframe(result_df.head(10), hide_index=True)
+
+                # Download link for full results
+                csv = result_df.to_csv(index=False)
+                b64 = base64.b64encode(csv.encode()).decode()
+                href = f'<a href="data:file/csv;base64,{b64}" download="h1b_recommendations.csv">Download CSV File</a>'
+                st.markdown(href, unsafe_allow_html=True)
 
     st.write("### About the App")
     st.write("This app recommends companies likely to sponsor H-1B visas based on user input. Use the form on the left to select SOC Titles, Industries, U.S. States/Territories, Company Sizes, and Company Ages, along with indicating the importance of each factor. Click 'Submit' to view the top 10 recommendations.")
