@@ -77,7 +77,7 @@ st.header("H-1B Visa Application Process")
 st.write("")
 
 body7 = st.empty()
-body7.write("The flowchart below presents a high-level view of the H-1B visa application ")
+body7.write("The flowchart below presents a high-level view of the H-1B visa application.")
 
 # Centered layout
 col1, col2, col3 = st.columns([1, 2, 1])
