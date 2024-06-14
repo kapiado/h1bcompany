@@ -251,7 +251,10 @@ def load_soc_titles():
 # Main Streamlit app code
 def main():
     st.title('H-1B Visa Company Recommendation Form') 
-    st.write("This app recommends companies that are likely to sponsor an H-1B visa based on your user input. Use the form below to get started!")
+    # st.write("This app recommends companies that are likely to sponsor an H-1B visa based on your user input. Use the form below to get started!")
+    # st.write("### About the App")
+    st.write("This app recommends companies likely to sponsor H-1B visas based on user input. Use the form below to select SOC Titles, Industries, U.S. States/Territories, Company Sizes, and Company Ages, along with indicating the importance of each factor. Click 'Submit' to view the top 10 recommendations.")
+
 
     # Load data (cached)
     df_cleaned = load_data()
@@ -464,11 +467,8 @@ def main():
     # Add a horizontal line using HTML
     st.write("<hr>", unsafe_allow_html=True)
 
-    st.write("### About the App")
-    st.write("This app recommends companies likely to sponsor H-1B visas based on user input. Use the form on the left to select SOC Titles, Industries, U.S. States/Territories, Company Sizes, and Company Ages, along with indicating the importance of each factor. Click 'Submit' to view the top 10 recommendations.")
-
     st.write("#### Disclaimer")
-    st.write("This tool provides recommendations based on aggregated data and user inputs. Actual results may vary. Always verify with official sources and consult legal experts when making decisions regarding H-1B visa applications.")
+    st.write("This tool provides recommendations based on aggregated data and user inputs. Due to the nature of the dataset and limited number of companies available, the data frame may contain less than ten companies. Actual results may vary. Always verify with official sources and consult legal experts when making decisions regarding H-1B visa applications.")
 
 if __name__ == '__main__':
     main()
