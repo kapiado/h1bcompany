@@ -404,14 +404,14 @@ def main():
                 # Condense worksite state
                 grouped_ws = result_df.groupby('EMPLOYER_NAME_CLEAN')['FULL_WORKSITE_STATE'].agg(list).reset_index()
                 grouped_ws['FULL_WORKSITE_STATE_LIST'] = grouped_ws['FULL_WORKSITE_STATE'].apply(lambda x: list(set(x)))  # Remove duplicates
-                grouped_ws['OTHER_WORKSITE_STATE'] = grouped_ws['FULL_WORKSITE_STATE_LIST'].apply(lambda x: x[1:] if len(x) > 1 else [])
+                grouped_ws['OTHER_WORKSITE_STATE'] = grouped_ws['FULL_WORKSITE_STATE'].apply(lambda x: x[1:] if len(x) > 1 else [])
                 result_df = result_df.merge(grouped_ws[['EMPLOYER_NAME_CLEAN', 'FULL_WORKSITE_STATE_LIST', 'OTHER_WORKSITE_STATE']], on='EMPLOYER_NAME_CLEAN', how='left')
                 result_df.rename(columns={'FULL_WORKSITE_STATE_LIST': 'FULL_WORKSITE_STATE'}, inplace=True)
 
                 # Condense SOC title
                 grouped_soc = result_df.groupby('EMPLOYER_NAME_CLEAN')['SOC_TITLE'].agg(list).reset_index()
                 grouped_soc['SOC_TITLE_LIST'] = grouped_soc['SOC_TITLE'].apply(lambda x: list(set(x)))  # Remove duplicates
-                grouped_soc['OTHER_SOC_TITLES'] = grouped_soc['SOC_TITLE_LIST'].apply(lambda x: x[1:] if len(x) > 1 else [])
+                grouped_soc['OTHER_SOC_TITLES'] = grouped_soc['SOC_TITLE'].apply(lambda x: x[1:] if len(x) > 1 else [])
                 result_df = result_df.merge(grouped_soc[['EMPLOYER_NAME_CLEAN', 'SOC_TITLE_LIST', 'OTHER_SOC_TITLES']], on='EMPLOYER_NAME_CLEAN', how='left')
                 result_df.rename(columns={'SOC_TITLE_LIST': 'SOC_TITLE'}, inplace=True)
 
@@ -433,6 +433,9 @@ def main():
                 b64 = base64.b64encode(csv.encode()).decode()
                 href = f'<a href="data:file/csv;base64,{b64}" download="h1b_recommendations.csv">Download CSV File</a>'
                 st.markdown(href, unsafe_allow_html=True)
+
+    # Add a horizontal line using HTML
+    st.write("<hr>", unsafe_allow_html=True)
 
     st.write("### About the App")
     st.write("This app recommends companies likely to sponsor H-1B visas based on user input. Use the form on the left to select SOC Titles, Industries, U.S. States/Territories, Company Sizes, and Company Ages, along with indicating the importance of each factor. Click 'Submit' to view the top 10 recommendations.")
