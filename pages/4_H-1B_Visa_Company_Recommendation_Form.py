@@ -278,8 +278,14 @@ def main():
                        '81 - Other Services (except Public Administration)']
         codeInfo = st.multiselect('Select industry/industries', codeOptions, help="Select the most appropriate Industry Code as found here https://www.census.gov/naics/?58967?yearbck=2022")
         selected_sector_codes = [int(code.split(' ')[0]) for code in codeInfo]
-        subsectorOptions = df_cleaned['SUBSECTOR_NAME'].unique().tolist()
-        
+
+        # Filter subsector options based on selected sectors
+        if selected_sector_codes:
+            filtered_df = df_cleaned[df_cleaned['SECTOR_CODE'].apply(lambda x: any(code.split()[0] == str(x) for code in codeInfo))]
+            subsectorOptions = filtered_df['SUBSECTOR_NAME'].unique().tolist()
+        else:
+            subsectorOptions = df_cleaned['SUBSECTOR_NAME'].unique().tolist()
+
         subsectorInfo = st.multiselect('Select subsector(s)', subsectorOptions)
 
         state_full_names = sorted(df_cleaned["FULL_WORKSITE_STATE"].unique().tolist())
