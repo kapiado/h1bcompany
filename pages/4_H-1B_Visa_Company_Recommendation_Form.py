@@ -366,19 +366,108 @@ def main():
         if filtered_df.empty:
             st.warning("No companies found matching your criteria. Please adjust your filters and try again.")
         else:
+            # def topsis(df, weights):
+            #     df = df.copy()
+            #     numeric_cols = df.select_dtypes(include=[np.number]).columns.intersection(weights.keys())
+                
+            #     # Normalize numeric columns
+            #     for col in numeric_cols:
+            #         df[col] = df[col] / np.sqrt((df[col] ** 2).sum())
+
+            #     # Apply weights to numeric columns
+            #     weighted_scores = df[numeric_cols].multiply(weights, axis=1)
+            #     df['topsis_score'] = weighted_scores.sum(axis=1)
+            #     return df.sort_values(by='topsis_score', ascending=False)
+
+            # weights = {
+            #     'SOC_TITLE': titleWeight,
+            #     'SECTOR_CODE': codeWeight,
+            #     'FULL_WORKSITE_STATE': stateWeight,
+            #     'EMPLOYEE_COUNT_CATEGORY': employeenumWeight,
+            #     'COMPANY_AGE_CATEGORY': companyageWeight,
+            #     'SPONSORED': 5  # Sponsor weight is fixed
+            # }
+
+            # # Normalize weights
+            # total_weight = sum(weights.values())
+            # normalized_weights = {k: v / total_weight for k, v in weights.items()}
+
+            # # Check and align weights with numeric columns
+            # numeric_cols = filtered_df.select_dtypes(include=[np.number]).columns
+            # valid_weights = {k: v for k, v in normalized_weights.items() if k in numeric_cols}
+
+            # if len(valid_weights) == 0:
+            #     st.error("No valid numeric columns found for TOPSIS calculation.")
+            # else:
+            #     result_df = topsis(filtered_df, valid_weights)
+
+            #     # Add job count column
+            #     result_df['JOB_COUNT'] = result_df.groupby('EMPLOYER_NAME_CLEAN')['EMPLOYER_NAME_CLEAN'].transform('count')
+
+            #     # Condense worksite state
+            #     grouped_ws = result_df.groupby('EMPLOYER_NAME_CLEAN')['FULL_WORKSITE_STATE'].agg(list).reset_index()
+            #     grouped_ws['FULL_WORKSITE_STATE_LIST'] = grouped_ws['FULL_WORKSITE_STATE'].apply(lambda x: list(set(x)))  # Remove duplicates
+            #     grouped_ws['OTHER_WORKSITE_STATE'] = grouped_ws['FULL_WORKSITE_STATE'].apply(lambda x: x[1:] if len(x) > 1 else [])
+            #     result_df = result_df.merge(grouped_ws[['EMPLOYER_NAME_CLEAN', 'FULL_WORKSITE_STATE_LIST', 'OTHER_WORKSITE_STATE']], on='EMPLOYER_NAME_CLEAN', how='left')
+            #     result_df.rename(columns={'FULL_WORKSITE_STATE_LIST': 'FULL_WORKSITE_STATE'}, inplace=True)
+
+            #     # Condense SOC title
+            #     grouped_soc = result_df.groupby('EMPLOYER_NAME_CLEAN')['SOC_TITLE'].agg(list).reset_index()
+            #     grouped_soc['SOC_TITLE_LIST'] = grouped_soc['SOC_TITLE'].apply(lambda x: list(set(x)))  # Remove duplicates
+            #     grouped_soc['OTHER_SOC_TITLES'] = grouped_soc['SOC_TITLE'].apply(lambda x: x[1:] if len(x) > 1 else [])
+            #     result_df = result_df.merge(grouped_soc[['EMPLOYER_NAME_CLEAN', 'SOC_TITLE_LIST', 'OTHER_SOC_TITLES']], on='EMPLOYER_NAME_CLEAN', how='left')
+                
+            #     result_df.rename(columns={'SOC_TITLE_LIST': 'SOC_TITLE'}, inplace=True)
+            #     # Function to remove duplicates in a list
+            #     def remove_duplicates(lst):
+            #         return list(set(lst))
+            #     result_df['OTHER_WORKSITE_STATE'] = result_df['OTHER_WORKSITE_STATE'].apply(remove_duplicates)
+            #     result_df['OTHER_SOC_TITLES'] = result_df['OTHER_SOC_TITLES'].apply(remove_duplicates)
+            #     # Drop any possible duplicate columns before final selection
+            #     result_df = result_df.loc[:,~result_df.columns.duplicated()]
+
+            #     # Display only unique outputs
+            #     result_df.drop_duplicates(subset=['EMPLOYER_NAME_CLEAN'], keep='first', inplace=True)
+            #     result_df = result_df[['EMPLOYER_NAME', 'SOC_TITLE', 'FULL_WORKSITE_STATE', 'PREVAILING_WAGE_ANNUAL', 
+            #                         'EMPLOYEE_COUNT_CATEGORY', 'COMPANY_AGE_CATEGORY', 'COMPANY_LINK', 
+            #                         'JOB_COUNT', 'OTHER_WORKSITE_STATE', 'OTHER_SOC_TITLES']]
+                
+
+            #     # Display top recommendations
+            #     st.write("#### Top 10 Recommendations")
+            #     st.dataframe(result_df.head(10), hide_index=True)
+
+            #     # Download link for full results
+            #     csv = result_df.to_csv(index=False)
+            #     b64 = base64.b64encode(csv.encode()).decode()
+            #     href = f'<a href="data:file/csv;base64,{b64}" download="h1b_recommendations.csv">Download CSV File</a>'
+            #     st.markdown(href, unsafe_allow_html=True)
             def topsis(df, weights):
                 df = df.copy()
+                
+                # Select numeric columns for TOPSIS calculation
                 numeric_cols = df.select_dtypes(include=[np.number]).columns.intersection(weights.keys())
+                
+                # Check if any valid numeric columns exist
+                if len(numeric_cols) == 0:
+                    raise ValueError("No valid numeric columns found for TOPSIS calculation.")
                 
                 # Normalize numeric columns
                 for col in numeric_cols:
                     df[col] = df[col] / np.sqrt((df[col] ** 2).sum())
-
+                
                 # Apply weights to numeric columns
                 weighted_scores = df[numeric_cols].multiply(weights, axis=1)
+                
+                # Calculate TOPSIS score
                 df['topsis_score'] = weighted_scores.sum(axis=1)
-                return df.sort_values(by='topsis_score', ascending=False)
+                
+                # Sort by TOPSIS score in descending order
+                df = df.sort_values(by='topsis_score', ascending=False)
+                
+                return df
 
+            # Define weights based on user input
             weights = {
                 'SOC_TITLE': titleWeight,
                 'SECTOR_CODE': codeWeight,
@@ -392,13 +481,12 @@ def main():
             total_weight = sum(weights.values())
             normalized_weights = {k: v / total_weight for k, v in weights.items()}
 
-            # Check and align weights with numeric columns
+            # Check and align weights with numeric columns in filtered_df
             numeric_cols = filtered_df.select_dtypes(include=[np.number]).columns
             valid_weights = {k: v for k, v in normalized_weights.items() if k in numeric_cols}
 
-            if len(valid_weights) == 0:
-                st.error("No valid numeric columns found for TOPSIS calculation.")
-            else:
+            # Apply TOPSIS method with valid weights
+            try:
                 result_df = topsis(filtered_df, valid_weights)
 
                 # Add job count column
@@ -418,20 +506,22 @@ def main():
                 result_df = result_df.merge(grouped_soc[['EMPLOYER_NAME_CLEAN', 'SOC_TITLE_LIST', 'OTHER_SOC_TITLES']], on='EMPLOYER_NAME_CLEAN', how='left')
                 
                 result_df.rename(columns={'SOC_TITLE_LIST': 'SOC_TITLE'}, inplace=True)
+
                 # Function to remove duplicates in a list
                 def remove_duplicates(lst):
                     return list(set(lst))
+                
                 result_df['OTHER_WORKSITE_STATE'] = result_df['OTHER_WORKSITE_STATE'].apply(remove_duplicates)
                 result_df['OTHER_SOC_TITLES'] = result_df['OTHER_SOC_TITLES'].apply(remove_duplicates)
+
                 # Drop any possible duplicate columns before final selection
                 result_df = result_df.loc[:,~result_df.columns.duplicated()]
 
                 # Display only unique outputs
                 result_df.drop_duplicates(subset=['EMPLOYER_NAME_CLEAN'], keep='first', inplace=True)
                 result_df = result_df[['EMPLOYER_NAME', 'SOC_TITLE', 'FULL_WORKSITE_STATE', 'PREVAILING_WAGE_ANNUAL', 
-                                    'EMPLOYEE_COUNT_CATEGORY', 'COMPANY_AGE_CATEGORY', 'COMPANY_LINK', 
-                                    'JOB_COUNT', 'OTHER_WORKSITE_STATE', 'OTHER_SOC_TITLES']]
-                
+                                        'EMPLOYEE_COUNT_CATEGORY', 'COMPANY_AGE_CATEGORY', 'COMPANY_LINK', 
+                                        'JOB_COUNT', 'OTHER_WORKSITE_STATE', 'OTHER_SOC_TITLES']]
 
                 # Display top recommendations
                 st.write("#### Top 10 Recommendations")
@@ -443,6 +533,8 @@ def main():
                 href = f'<a href="data:file/csv;base64,{b64}" download="h1b_recommendations.csv">Download CSV File</a>'
                 st.markdown(href, unsafe_allow_html=True)
 
+            except ValueError as e:
+                st.error(str(e))
 
     # Add a horizontal line using HTML
     st.write("<hr>", unsafe_allow_html=True)
